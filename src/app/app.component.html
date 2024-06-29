@@ -1,0 +1,57 @@
+<nz-layout id="main" style="min-height: -webkit-fill-available;">    
+    <!-- <nz-header>
+        <i
+          class="trigger"
+          nz-icon
+          [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          (click)="isCollapsed = !isCollapsed"
+        ></i>
+        <app-header></app-header>
+    </nz-header> -->
+    <nz-header nzCollapsible>
+        <app-header></app-header>
+    </nz-header>
+    <nz-layout>
+        <!-- <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzBreakpoint]="'lg'"> -->
+        <!-- <nz-sider nzCollapsible> -->
+        <!-- <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null"> -->
+        <nz-sider *ngIf="accountService.getUser()" nzCollapsible  [nzCollapsedWidth]="0" [(nzCollapsed)]="isCollapsed">
+            <app-menu></app-menu>
+        </nz-sider>
+        <nz-content>
+            <router-outlet></router-outlet>
+            <!-- let see how to combine header.component and landing.component right silder into common
+                <nz-drawer
+                [nzVisible]="drawerVisisble"
+                nzPlacement="right"
+                [nzTitle]="drawerTitle"
+                nzWidth="100%"
+                (nzOnClose)="close()"
+                >
+                    
+                <button style="float:right" nz-button nzType="primary" (click)="logout()">Logout</button>
+                <br/>
+                <ng-container>
+                    <nz-collapse nzAccordion>          
+                    <nz-collapse-panel [nzHeader]="'Virtiual Card'" [nzActive]="true">
+                        <app-virtual-card></app-virtual-card>
+                    </nz-collapse-panel>          
+                    <nz-collapse-panel *ngIf="!isStaff" [nzHeader]="'PaySlip'" [nzActive]="true">
+                        <app-profile></app-profile>
+                    </nz-collapse-panel>
+                    </nz-collapse>
+                </ng-container>
+            </nz-drawer> -->
+        </nz-content>
+        <!-- <nz-sider>right sidebar</nz-sider> -->
+    </nz-layout>
+    <!-- <nz-footer nzCollapsible> -->
+        <app-footer></app-footer>
+    <!-- </nz-footer> -->
+</nz-layout>
+
+<nz-layout id="login" style="min-height: -webkit-fill-available;display:none;background-color: #df6317;">    
+    <app-login></app-login>
+</nz-layout>
+
+

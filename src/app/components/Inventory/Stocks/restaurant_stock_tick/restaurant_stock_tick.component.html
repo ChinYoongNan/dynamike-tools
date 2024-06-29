@@ -1,0 +1,62 @@
+
+<style>
+    .menuRow{
+        position: relative;
+        padding: 12px 16px 12px 40px;
+        line-height: 22px;
+        cursor: pointer;
+        transition: all .3s;
+    }
+</style>
+<div class="contain-inter" style="height: fit-content;">
+    <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+        <h2 style="float:left;"><span>Stock Tick 点货单</span></h2>
+        <!-- <div style="float:right">
+            <nz-button-group nzSize="small" class="tableBut" >
+                <button nzType="primary"  nz-button
+                    (click)="stockCheck(stockChecks.stockCheck)">Save / 保存记录</button>
+            </nz-button-group>
+        </div> -->
+    </div>
+    <div class="tableShow-table">
+        <div style="width:100%" >
+            <div nz-row style="display: flex;width: 100%;">
+                <div style="width: 100%;">                        
+                    <label class="displayText">Date / 日期 :</label>
+                    <!-- <label >{{purchase_date}}</label> -->
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Date is required!">
+                          <nz-input-group>
+                            <input nz-input type="date" [(ngModel)]="purchase_date"  />
+                          </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <app-product_search_engine mode="ProductDetail" [itemCode]="itemCode" (searchResult)="getSearchValue($event)" [pagination]="paginationData"></app-product_search_engine> -->
+    <ng-container *ngFor="let data of ProductTypes; let i = index">
+        <nz-collapse nzAccordion>          
+        <nz-collapse-panel [nzHeader]="data.description" [nzDisabled]="!data.product">
+                <ng-container *ngFor="let p of data.product">
+                    <nz-collapse [nzAccordion]="false" >  
+                        <div class="headerInfo">
+                            <div class="menuRow" style="padding:0">
+                                {{p.code}} - {{p.name}}<br/>
+                                Available : <input style="width:50px;padding: 1px 1px;" nz-input  type="number" [(ngModel)]="p.stock" (keyup.enter)="qtyChange($event)"/>     
+                                <button nzShape="circle" nz-button nzType="primary" (click)="addListItems(p.code,p.stock,p.unitCost,0,p)" ><span nz-icon nzType="save" nzTheme="outline"></span></button>      
+                            </div>
+                          </div>        
+                    </nz-collapse>
+                </ng-container> 
+        </nz-collapse-panel>  
+        <ng-template #elseCollapsePanelTemplate>
+            <nz-collapse-panel [nzHeader]="data.description" [nzActive]="false">
+            </nz-collapse-panel> 
+        </ng-template>
+        </nz-collapse>
+    </ng-container>  
+</div>
+<ngx-loading [show]="isVisible" [config]="{ backdropBorderRadius: '3px'}" [template]="customLoadingTemplate">
+</ngx-loading>

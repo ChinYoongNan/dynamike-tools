@@ -1,0 +1,170 @@
+<div class="contain-inter">
+    <!-- <div class="tableShow-area"   -->
+    <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+        <h2 style="float:left;"><span>Stock Check Listing 查货记录</span></h2>
+        <!-- <button nz-button nzType="primary" (click)="init()"  ><i nz-icon nzType="reload"></i>Reload</button> -->
+        <div style="float:right">
+            <nz-button-group nzSize="small" class="tableBut" >
+                <button nzType="primary"  nz-button
+                    (click)="runCheckStock()">Run Check / 查货</button>
+                    <!-- [disabled]="tableEmpty" -->
+            </nz-button-group>
+        </div>
+    </div>
+    <div class="tableShow-area"  style="height: fit-content;"
+        >
+        <style>
+            .displayText{
+                width:250px;
+            }
+            .inputWidth{
+                width:95%;
+            }
+        </style>
+        <div class="tableShow-table">
+            <div style="width:100%">
+                <div nz-row style="display: flex;width: 100%;">
+                    <div style="width: 100%;">   
+                        <label class="displayText">Year: </label>
+                        <nz-select [(ngModel)]="year_index" (ngModelChange)="AccountYearChange($event)"
+                            nzPlaceHolder="Select a Year">
+                            <ng-container *ngFor="let p of AccountYears">
+                                <nz-option *ngIf="!YearLoadSel" [nzValue]="p" [nzLabel]="p"></nz-option>
+                            </ng-container>
+                            <nz-option *ngIf="YearLoadSel" nzDisabled nzCustomContent>
+                                <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                            </nz-option>
+                        </nz-select>
+                        <label class="displayText">Month: </label>
+                        <nz-select [(ngModel)]="month_index" (ngModelChange)="AccountMonthChange($event)"
+                            nzPlaceHolder="Select a Month">
+                            <ng-container *ngFor="let p of month">
+                                <nz-option [nzValue]="p.id" [nzLabel]="p.value"></nz-option>
+                            </ng-container>
+                        </nz-select>
+                    </div>
+                </div>
+                <div nz-row style="display: flex;width: 100%;">
+                    <div style="width: 100%;">                        
+                        <label class="displayText">Date / 日期 :</label>
+                        <nz-select [(ngModel)]="purchase_date" 
+                        (ngModelChange)="stockCheckListing($event)"                        
+                            nzPlaceHolder="Select a Date">
+                            <ng-container *ngFor="let p of StockCheckDate">
+                                <nz-option [nzValue]="p.date" [nzLabel]="p.date"></nz-option>
+                            </ng-container>
+                        </nz-select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="butArea" style="border: 2px solid grey;  margin-top: 10px;">
+                
+                <div [style.height]="'30px'" class="tableTop">
+                    <div class="thLeft" style="width:100%">
+                        <a class="columns" style="pointer-events: auto;"
+                             nz-dropdown
+                            nzTrigger="click" [nzDropdownMenu]="menu">
+                            <span>
+                                Listing
+                            </span>
+                        </a>
+                        <nz-dropdown-menu #menu="nzDropdownMenu">
+                            <div class="dropDownCls">
+                                <div class="Down-header">Show Columns</div>
+                                <nz-checkbox-wrapper style="width: 100%;" >
+                                </nz-checkbox-wrapper>
+                            </div>
+                        </nz-dropdown-menu>
+                    </div>
+                </div>
+                <nz-table  [nzScroll]="{ x: '1150px' }"   [nzData]="StockCheckListing" nzBordered nzSize="small"
+                    nzHideOnSinglePage="true" [nzFrontPagination]="false" [nzNoResult]="emptyTemplate">
+                    <ng-template #emptyTemplate>
+                        <tr>
+                            <nz-empty *ngIf="NoResultId=='No Data'" nzNotFoundImage="simple"></nz-empty>
+                            <nz-empty *ngIf="NoResultId=='No Result'" nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                                [nzNotFoundContent]="contentTpl">
+                                <ng-template #contentTpl>
+                                    <span> {{NoResultId}} </span>
+                                </ng-template>
+                            </nz-empty>
+                        </tr>
+                    </ng-template>
+                    <thead>
+                        <tr>
+                            <ng-container *ngFor="let p of headerColumn">
+                                <th  class="firstTh" style="text-align: center;z-index: 20;"
+                                    [colspan]="1">
+                                    {{p}}
+                                </th>
+                            </ng-container>
+                        </tr>
+                        
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let p of StockCheckListing,let i = index">
+                            <tr >
+                                <td>
+                                    {{p.productId}} - {{p.productName}}
+                                </td>  
+                                <td class="trDisplayLabel{{i}}">
+                                    {{p.quantity}}
+                                </td> 
+                                <!-- <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input  class="listingeditinput" (change)="calTotalStock(i)"  [(ngModel)]="p.stock" />
+                                </td> 
+                                -->
+                                <td class="trDisplayLabel{{i}}">
+                                    {{p.unitCost}}
+                                </td>
+                                <td class="trDisplayLabel{{i}}">
+                                    {{p.total}}
+                                </td> 
+                                <!-- <td class="trDisplayLabel{{i}}">
+                                    {{p.stockcheck.quantity}}
+                                </td>  
+                                <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input  class="listingeditinput" (change)="calStockTotalStock(i)"  [(ngModel)]="p.stockcheck.quantity" />
+                                </td> 
+                                <td>
+                                    {{p.unit_cost}}
+                                </td>  
+                                <td>
+                                    {{p.total_stock}}
+                                </td>   -->
+                                <td>
+                                    <button nz-button nzType="primary" (click)="update(i)"><i nz-icon nzType="edit" ></i>Edit</button>                                 
+                                </td>
+                                   
+                            </tr>    
+                        </ng-container>
+
+                            <!-- <tr >
+                                <td >
+                                </td>  
+                                <td>
+                                    Total
+                                </td> 
+                                <td>
+                                    {{stock_check_total_stock_value}}
+                                </td>
+                                <td>
+                                    Total
+                                </td>  
+                                <td>
+                                    {{total_stock_value}}
+                                </td>  
+                                <td>                                
+                                </td>
+                                
+                            </tr>   -->
+                        
+                    </tbody>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+</div>
+<ngx-loading [show]="isVisible" [config]="{ backdropBorderRadius: '3px'}" [template]="customLoadingTemplate">
+</ngx-loading>

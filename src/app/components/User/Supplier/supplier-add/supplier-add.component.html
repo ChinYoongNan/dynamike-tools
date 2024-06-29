@@ -1,0 +1,5 @@
+<div class="contain-inter">
+    <app-page-header [HeaderItems]="pageHeader" (initPage)="init()"></app-page-header>
+    <button id="saveButton" style="display:none"(click)="saveSupplier();">Save button</button>
+    <app-page-detail [pageDetail]="pageDetailComponent.pageDetailData" (save)="save($event)" (outputData)="pageDetailComponent.getOutputData($event)"></app-page-detail>
+</div>

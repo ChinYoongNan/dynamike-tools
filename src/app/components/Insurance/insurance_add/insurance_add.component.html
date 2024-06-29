@@ -1,0 +1,238 @@
+<div class="contain-inter" >
+    <div style="float:right;display:none">
+        <button id="receipt" nzType="primary" nz-button (click)="generateQuotation()">Generate Quotation</button>
+    </div>
+    <app-page-header [HeaderItems]="pageHeader" (initPage)="reset()"></app-page-header>
+    <div class="tableShow-area"  style="height: fit-content;">
+        <div class="tableShow-table" >                                           
+            <div style="display: flex;width: 100%;margin-top: 10px;align-items: flex-top;">
+                <div style="width:50%">
+                    <label class="displayText">Product Type:</label>                                            
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Product Type is required!">
+                            <nz-input-group > 
+                                <nz-select id="type" nzShowSearch class="inputWidth" [(ngModel)]="product_index"   
+                                (ngModelChange)="TypeChange($event)"                      
+                                    nzPlaceHolder="Select a Policy Type">
+                                    <ng-container *ngFor="let p of ProductTypes, let i = index">
+                                        <nz-option *ngIf="!ProductTypeLoadSel" [nzValue]="i" [nzLabel]="p.description"></nz-option>
+                                    </ng-container>
+                                    <nz-option *ngIf="ProductTypeLoadSel" nzDisabled nzCustomContent>
+                                        <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                                    </nz-option>
+                                </nz-select>       
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>                 
+            <div style="display: flex;width: 100%;margin-top: 10px;align-items: flex-top;">  
+                <div style="width:50%">
+                    <label class="displayText">Insured Date：</label>
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Insured Date is required!">
+                            <nz-input-group >                                 
+                                <input nz-input [(ngModel)]="insurancePolicyInfo.insuredDate" type="date" (ngModelChange)="dateChange($event)" class="inputWidth" />
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>           
+                <div style="width:50%">
+                    <label class="displayText">Renewal Date :</label>  
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Renewal Date is required!">
+                            <nz-input-group >                                 
+                                <input nz-input [(ngModel)]="insurancePolicyInfo.renewalDate" type="date" class="inputWidth" />
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+            <div style="display: none;width: 100%;margin-top: 10px;align-items: flex-end;">
+                <div style="width:50%">
+                    <label class="displayText">Policy No :</label>                                                                
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Policy No is required!">
+                            <nz-input-group >                                 
+                                <input nz-input [(ngModel)]="insurancePolicyInfo.policyNo"  class="inputWidth" />     
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div style="width:50%">
+                    <label class="displayText">Insured Name :</label>
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Insured Name is required!">
+                            <nz-input-group >                                 
+                                <input nz-input [(ngModel)]="insurancePolicyInfo.insuredObject"  class="inputWidth" />     
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div> 
+            </div>   
+            <div style="display: flex;width: 100%;margin-top: 10px;align-items: flex-end;">                
+                <div style="width:100%">
+                    <label class="displayText">Insured Value：</label>  
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Content Value is required!">
+                            <nz-input-group nzSuffix="MYR" nzPrefix="RM">                           
+                                <input nz-input [(ngModel)]="insurancePolicyInfo.contentValue" type="number" class="inputWidth" />
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>            
+            <div style="display: none;width: 100%;margin-top: 10px;align-items: flex-end;">
+                <div style="width:50%">
+                    <label class="displayText">Wind Screen (Value)：</label>
+                    <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                        <input type="number" nz-input [(ngModel)]="wind_screen" />
+                    </nz-input-group>
+                </div>
+                <div style="width:50%">
+                    <label class="displayText">E-Hailing:</label>
+                    <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                        <input type="number" nz-input [(ngModel)]="e_hailing" />
+                    </nz-input-group>
+                </div>
+            </div> 
+        </div>  
+        <div style="display: flex;width: 100%;margin-top: 10px;">         
+            <div style="width:50%">
+                <label class="displayText">Name / Plate No</label>
+                <input nz-input  class="inputWidth" [(ngModel)]="plate_no"/>
+            </div>
+            <div style="width:50%"> 
+                <label class="displayText">Staff / 员工</label>
+                <nz-input-group>     
+                    <nz-select [(ngModel)]="staff" style="width:100%"                            
+                        (ngModelChange)="selectedStaff($event)" 
+                        nzPlaceHolder="Select a Staff">
+                        <ng-container *ngFor="let p of staff_list;let i = index">
+                            <nz-option [nzValue]="i" [nzLabel]="p.code + '-' + p.name"></nz-option>
+                        </ng-container>
+                        <nz-option></nz-option>
+                    </nz-select>
+                </nz-input-group>
+            </div>
+        </div>  
+        <br/>
+        <br/>
+        <div class="premium">
+            <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+                <h2 style="float:left;"><span>Premium</span></h2>
+            </div>
+            <div style="display: flex;width: 100%;margin-top: 10px;align-items: flex-end;">
+                <div style="width:100%">
+                    <label class="displayText">Premium :</label>
+                    <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                        <input nz-input type="number" (change)="calculator($event)" [(ngModel)]="insurancePolicyInfo.premium"/>
+                    </nz-input-group>
+                </div>
+            </div> 
+            <div style="display: flex;width: 100%;margin-top: 10px;align-items: flex-end;">
+                <div style="width:50%">
+                    <label class="displayText">GST Charge:</label>
+                    <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                        <input nz-input type="number"  [(ngModel)]="insurancePolicyInfo.gst"/>
+                    </nz-input-group>
+                </div>
+                <div style="width:50%">
+                    <label class="displayText">Stamp Duty：</label>
+                    <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                        <input nz-input type="number" [(ngModel)]="insurancePolicyInfo.stampDuty" disabled/>
+                    </nz-input-group>
+                </div>
+            </div>
+            <div style="display: flex;width: 100%;margin-top: 10px;align-items: flex-top;">
+                <div style="width:50%">
+                    <label class="displayText">Road Tax :</label>
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Road Tax is required!">
+                            <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                                <input nz-input type="number" (change)="calculator($event)" [(ngModel)]="insurancePolicyInfo.roadtax" />
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>  
+                <div style="width:50%">
+                    <label class="displayText">Paid By:</label> 
+                    <nz-input-group>     
+                        <nz-select [(ngModel)]="splitRoadTax" style="width:100%"                            
+                            (ngModelChange)="selectedStaffForRoadTax($event)" 
+                            nzPlaceHolder="Select a Staff">
+                            <ng-container *ngFor="let p of staff_list;let i = index">
+                                <nz-option [nzValue]="p.name" [nzLabel]="p.code + '-' + p.name"></nz-option>
+                            </ng-container>
+                            <nz-option></nz-option>
+                        </nz-select>
+                    </nz-input-group>   
+                </div>    
+            </div>
+            <div style="display: flex;width: 100%;margin-top: 10px;align-items: flex-end;">    
+                <div style="width:50%">
+                    <label class="displayText">Service Charge :</label>                         
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Service Charge is required!">
+                            <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                                <input nz-input type="number" (change)="calculator($event)" [(ngModel)]="insurancePolicyInfo.serviceCharges" />
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>              
+                <div style="width:50%">
+                    <label class="displayText">Postage :</label>    
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Postage is required!">
+                            <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                                <input nz-input type="number" (change)="calculator($event)" [(ngModel)]="insurancePolicyInfo.postage" />
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item> 
+                </div>
+            </div>             
+            <div style="display: flex;width: 100%;margin-top: 10px;align-items: flex-end;">
+                <div style="width:50%">
+                    <label class="displayText">Commission：</label>
+                    <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                        <input nz-input type="number" (change)="calculator($event)" [(ngModel)]="insurancePolicyInfo.commission"/>
+                    </nz-input-group>
+                </div>
+            </div>
+            <div style="display: none;width: 100%;margin-top: 10px;align-items: flex-top;">
+                <div style="width:50%">
+                    <label class="displayText">Others :</label>                          
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Other is required!">
+                            <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                                <input nz-input type="number" (change)="calculator($event)" [(ngModel)]="insurancePolicyInfo.others" />
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div style="width:50%">
+                    <label class="displayText">Discount</label>
+                    <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                        <input nz-input type="number" (change)="calculator($event)" [(ngModel)]="insurancePolicyInfo.discount"/>
+                    </nz-input-group>
+                </div>
+                <div style="width:50%">
+                    <label class="displayText">Net Amount:</label>
+                    <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                        <input nz-input type="number" [(ngModel)]="insurancePolicyInfo.netAmount" disabled/>
+                    </nz-input-group>
+                </div>    
+            </div>            
+            <div style="width:100%">
+                <label class="displayText">Final Amount :</label>                          
+                <nz-form-item>
+                    <nz-form-control nzErrorTip="Final Amount is required!">
+                        <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                            <input nz-input type="number" [(ngModel)]="insurancePolicyInfo.finalAmount" disabled/>
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div> 
+    </div>
+</div>

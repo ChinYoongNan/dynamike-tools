@@ -1,0 +1,93 @@
+.guide-header {
+    background-color: rgba(255, 215, 72, 0.3);
+    padding: 1rem 1rem;
+    overflow: hidden;
+    display: flex;
+}
+.topHeader {
+    // font-family: "Metropolis";
+    margin: auto;
+    display: inline-block;
+    button {
+        height: 24px;
+        line-height: 12px;
+        margin-left: 1rem;
+        font-size: 12px;
+    }
+    i {
+        font-weight: 500;
+        font-size: 1.5rem;
+    }
+}
+.guide-header.hide {
+    display: none;
+}
+.guide-header-left {
+    float: left;
+    width: 97%;
+}
+.guide-header-right {
+    float: right;
+}
+
+::ng-deep svg {
+    // width: 1rem;
+}
+
+::ng-deep .introjs-overlay {
+    opacity: 0 !important;
+}
+::ng-deep .introjs-helperLayer {
+    background: none !important;
+}
+
+.introjs-helperLayer {
+    background-color: #33c3f0 !important;
+}
+
+::ng-deep .introjs-bullets ul li a.active {
+    background: #0077b8 !important;
+}
+::ng-deep .introjs-button {
+    text-shadow: none;
+}
+::ng-deep .introjs-button,
+::ng-deep .introjs-button:focus {
+    background-color: #0077b8;
+    background-image: none;
+    color: white;
+}
+::ng-deep .introjs-button.introjs-disabled,
+::ng-deep .introjs-button.introjs-disabled:hover {
+    background-color: #f4f4f4;
+    background-image: none;
+    color: #9a9a9a;
+}
+::ng-deep .introjs-button:hover {
+    color: white;
+    text-decoration: none;
+}
+::ng-deep .introjs-button:focus {
+    color: white;
+    text-decoration: none;
+}
+::ng-deep .introjs-helperNumberLayer {
+    background: #0077b8;
+}
+::ng-deep .introjs-tooltip{
+    // font-family: "Metropolis";
+}
+::ng-deep .introjs-tooltipbuttons{
+    a{
+        // font-family: "Metropolis";
+    }
+}
+::ng-deep .ant-layout-sider-zero-width-trigger {
+    top: 0;
+    position: fixed;
+    left: 0px
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 3.5) {
+    /* CSS */
+}
+

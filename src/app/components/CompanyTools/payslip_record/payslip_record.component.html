@@ -1,0 +1,15 @@
+<div class="contain-inter" >
+    <app-page-header [HeaderItems]="pageHeader" (initPage)="init()"></app-page-header>
+    
+    <div  class="tableShow-area"  style="height: fit-content">
+        <app-table (updatedData)="dynamike.getUpdatedData($event)" 
+        (selectedIndex)="dynamike.getSelectedIndex($event)" 
+        [notifier]="tableData" 
+        [tableSettings]="tableSettings" 
+        [tableHeaderData]="headerData" 
+        (nextPage)="dynamike.nextPageSetting($event,this,nextPage)"></app-table>
+    </div>
+    <button id="generateButton"  (click)="generatePdf()"></button>    
+</div>
+<ngx-loading [show]="isVisible" [config]="{ backdropBorderRadius: '3px'}" [template]="customLoadingTemplate">
+</ngx-loading>

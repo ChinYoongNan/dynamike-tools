@@ -1,0 +1,259 @@
+<div class="contain-inter" style="height: fit-content;">
+    <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+        <button id="round" nzShape="circle" nz-button nzType="primary" (click)="init()"  ><i nz-icon nzType="reload"></i></button>
+        <h2 style="float:left;"><span>Transaction 进单 Add</span></h2>
+        <div *ngIf="pageMode=='Detail'">
+            <label class="displayText">Order No / 单号码 :</label>
+            <input nz-input  [(ngModel)]="searchOrderId" />
+            <nz-button-group nzSize="small" class="tableBut" >
+                <button nzType="primary" title="" nz-button
+                    (click)="searchOrder()">Search / 寻找记录</button>
+            </nz-button-group>
+        </div>
+        <div style="float:right">
+            <nz-button-group nzSize="small" class="tableBut" >
+                <button nzType="primary"  nz-button
+                    (click)="saveOrder()">Save / 保存记录</button>
+            </nz-button-group>
+        </div>
+    </div>
+    <div class="tableShow-area"  style="height: fit-content;">
+        <div class="tableShow-table">
+            <div style="width:100%">
+                <div nz-row style="display: flex;width: 100%;">
+                    <div style="width: 50%;">                        
+                        <label class="displayText">Date / 日期 :</label>
+                        <input nz-input type="date" [(ngModel)]="date" />
+                    </div>
+                    <div style="width:50%">
+                        <label class="displayText">Provider / 网店 :</label>
+                        <nz-select class="inputWidth"
+                        [(ngModel)]="provider_index" (ngModelChange)="ProviderChange($event)"
+                            nzPlaceHolder="Select a Provider">
+                            
+                            <ng-container *ngFor="let p of Provider; let i = index">
+                                <nz-option *ngIf="!ProviderLoadSel" [nzValue]="i" [nzLabel]="p.description"></nz-option>
+                            </ng-container>
+                            <nz-option *ngIf="ProviderLoadSel" nzDisabled nzCustomContent>
+                                <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                            </nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+                <div style="display: flex;width: 100%;margin-top: 10px;">
+                    <div style="width:50%">
+                        <label class="displayText">Order No / 单号码 :</label>
+                        <input nz-input  [(ngModel)]="orderId" class="inputWidth"/>
+                    </div>
+                    <div style="width:50%">
+                        <label class="displayText">Total Payment / 总额:</label>
+                        <div style="float:right;padding-right:5px">RM {{paymentDue}}</div>
+                    </div>
+                </div>
+                <div style="display: flex;width: 100%;margin-top: 10px;">
+                    <div style="width:50%">
+                        <label class="displayText">Payment Credit / 付款:</label>
+                        <div style="float:right;padding-right:5px">RM<input nz-input [(ngModel)]="paymentCredit"  (change)="amountChange($event)" /></div>
+                    </div>
+                    <div style="width:50%">
+                        <label class="displayText">Payment Fee / 费用 :</label>
+                        <div style="float:right;padding-right:5px">RM<input nz-input [(ngModel)]="paymentFees" (change)="amountChange($event)" /></div>
+                    </div>
+                </div>
+                <div style="display: flex;width: 100%;margin-top: 10px;">                    
+                    <div style="width:50%">
+                        <label class="displayText">Shipping Fee / 运输费用 :</label>
+                        <div style="float:right;padding-right:5px">RM<input nz-input [(ngModel)]="shippingFees" (change)="amountChange($event)"  /></div>
+                    </div>
+                    <!-- <div style="width:50%;display:flex">
+                        <label class="displayText">Free Shipping / 免运输 :</label>
+                        <input nz-input [(ngModel)]="freeShipping" (change)="freeShippingChange($event)" type="checkbox"/>
+                    </div> -->
+                </div>
+                <!-- <div style="display: flex;width: 100%;margin-top: 10px;">
+                    <div style="width:100%">
+                        <label class="displayText" style="vertical-align: top;">Particular / 内容 :</label>
+                        <textarea rows="5" class="inputWidth"  [(ngModel)]="remarks" class="inputWidth"></textarea>
+                    </div>
+                </div> -->
+            </div>
+            <div >                
+                <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+                    <h3 style="float:left;"><span>Client / 客人</span></h3>
+                    <div style="float:right">
+                        <nz-button-group nzSize="small" class="tableBut" >
+                            <button nzType="primary"  nz-button 
+                                (click)="saveClient()">Save</button>
+                        </nz-button-group>
+                    </div>
+                </div>                
+                <div style="width:100%">
+                    <label class="displayText">Client Name</label>                                            
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Client is required!">
+                            <nz-input-group 
+                            [nzAddOnAfter]="suffixButton"> 
+                                <nz-select id="clients" nzShowSearch class="inputWidth" [(ngModel)]="client_id"    
+                                (ngModelChange)="ClientChange($event)"
+                                (keydown.enter)="searchClient($event)"                  
+                                    nzPlaceHolder="Select a Insured Client">
+                                    <ng-container  *ngFor="let p of Client, let i = index">
+                                        <nz-option *ngIf="Client" [nzValue]="p.id" [nzLabel]="p.name"></nz-option>
+                                    </ng-container> -->
+                                    <nz-option *ngIf="!Client" nzDisabled nzCustomContent>
+                                        <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                                    </nz-option>
+                                </nz-select>       
+                            </nz-input-group>
+                            <ng-template #suffixButton>
+                                <button nzType="primary" nz-button
+                                        (click)="searchClient(client_id)">Search</button>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div style="display: flex;width: 100%;margin-top: 10px;">
+                    <div style="width:50%">
+                        <label class="displayText">Client / 客人名：</label>
+                        <input nz-input class="inputWidth" [(ngModel)]="client_name"/>
+                    </div>
+                    <div style="width:50%">
+                        <label class="displayText">Address / 客人地址：</label>
+                        <textarea rows="5" class="inputWidth" [(ngModel)]="client_address"></textarea>
+                    </div>
+                </div>  
+                <div style="display: flex;width: 100%;margin-top: 10px;">
+                    <div style="width:50%">
+                        <label class="displayText">Contact No. / 电话号码：</label>
+                        <input nz-input  class="inputWidth" [(ngModel)]="client_contact"/>
+                    </div>  
+                    <div style="width:50%">
+                        <label class="displayText">Shipping Address / 运输地址：</label>
+                        <textarea rows="5" class="inputWidth"  [(ngModel)]="client_shippingAddress"></textarea>
+                    </div>
+                </div>   
+                <div style="display: flex;width: 100%;margin-top: 10px;">              
+                    <div style="width:50%;display:flex">
+                        <label class="displayText">SG Client / 新加坡 :</label>
+                        <input nz-input [(ngModel)]="freeShipping" (change)="freeShippingChange($event)" type="checkbox"/>
+                    </div>
+                </div>           
+            </div>
+            
+            <div class="butArea" style="border: 2px solid grey;  margin-top: 10px;">
+                <div style="padding:5px" style="border-bottom: 2px solid grey;padding: 10px;">
+                    <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+                        <h3 style="float:left;"><span>Product List / 货单</span></h3>
+                        <div style="float:right">
+                            <nz-button-group nzSize="small" class="tableBut" >
+                                <button nzType="primary"  nz-button 
+                                    (click)="addItems(item_code,item_quantity,item_unit_cost,item_sellingPrice)">Add Item</button>
+                                    <!-- [disabled]="tableEmpty" -->
+                            </nz-button-group>
+                        </div>
+                    </div>
+                    <div nz-row style="display: flex;width: 100%;">
+                        <div style="width: 50%;">
+                            <label class="displayText">Product Code / 货名 :</label>
+                            <input nz-input  [(ngModel)]="item_code" />
+
+                            <nz-select nzShowSearch class="inputWidth"
+                                [(ngModel)]="item_index"
+                                (ngModelChange)="ItemChange($event)"                    
+                                nzPlaceHolder="Select a Solution">
+                                <!-- [(ngModel)]="item_index"  -->
+                                <ng-container *ngFor="let p of Items; let i = index">Items
+                                    <nz-option  *ngIf="!ProductLoadSel" [nzValue]="i" [nzLabel]="p.code + '-' + p.name"></nz-option>
+                                </ng-container>
+                                
+                                <nz-option *ngIf="ProductLoadSel" nzDisabled nzCustomContent>
+                                    <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                                </nz-option>
+                            </nz-select>
+                        </div>
+                        <div style="width:50%">
+                            <label class="displayText">Selling Price / 卖价 ：</label>
+                            <input nz-input  class="inputWidth" [(ngModel)]="item_sellingPrice" />
+                        </div>
+                        <div style="width:50%">
+                            <label class="displayText">Quantity / 数量 ：</label>
+                            <input nz-input  class="inputWidth" [(ngModel)]="item_quantity" />
+                        </div>
+                        <div >
+                            
+                        </div>
+                    </div>
+                    <div [style.height]="'30px'" class="tableTop">
+                        <div class="thLeft" style="width:100%">
+                            
+                            <a class="columns" style="pointer-events: auto;"
+                                 nz-dropdown 
+                                nzTrigger="click" [nzDropdownMenu]="menu">
+                                <span>
+                                    Listing
+                                </span>
+                            </a>
+                            <nz-dropdown-menu #menu="nzDropdownMenu">
+                                <div class="dropDownCls">
+                                    <div class="Down-header">Show Columns</div>
+                                    <nz-checkbox-wrapper style="width: 100%;" >
+                                        
+                                    </nz-checkbox-wrapper>
+                                </div>
+                            </nz-dropdown-menu>
+                        </div>
+                    </div>
+                </div>
+                <nz-table  [nzScroll]="{ x: '1150px' }"   [nzData]="OrderItems" nzBordered nzSize="small"
+                    nzHideOnSinglePage="true" [nzFrontPagination]="false" [nzNoResult]="emptyTemplate">
+                    <ng-template #emptyTemplate>
+                        <tr>
+                            <nz-empty *ngIf="NoResultId=='No Data'" nzNotFoundImage="simple"></nz-empty>
+                            <nz-empty *ngIf="NoResultId=='No Result'" nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                                [nzNotFoundContent]="contentTpl">
+                                <ng-template #contentTpl>
+                                    <span> {{NoResultId}} </span>
+                                </ng-template>
+                            </nz-empty>
+                        </tr>
+                    </ng-template>
+                    <thead>
+                        <tr>
+                            <ng-container *ngFor="let p of order_product">
+                                <th  class="firstTh" style="text-align: center;z-index: 20;"
+                                    [colspan]="1">
+                                    {{p}}
+                                </th>
+                            </ng-container>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        
+                        <ng-container *ngFor="let p of order_items.order_item,let i = index">
+                            <tr >
+                                <td>
+                                    {{p.itemId}} - {{p.itemName}}
+                                </td>  
+                                <td>
+                                    {{p.quantity}}
+                                </td>                                 
+                                <td>
+                                    {{p.sellingPrice}}
+                                </td>
+                                <td>
+                                    <button nzType="primary" nz-button 
+                                    (click)="deleteItem(i)">Delete</button>
+                                    
+                                </td>
+                                   
+                            </tr>    
+                        </ng-container>
+                    </tbody>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+</div>
+<ngx-loading [show]="isVisible" [config]="{ backdropBorderRadius: '3px'}" [template]="customLoadingTemplate">
+</ngx-loading>

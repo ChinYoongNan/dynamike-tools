@@ -1,0 +1,13 @@
+<div class="contain-inter" >
+    <app-page-header [HeaderItems]="pageHeader" (initPage)="init()"></app-page-header>
+    
+    <div  class="tableShow-area"  style="height: fit-content">
+        <app-table (updatedData)="getUpdatedData($event)" 
+        (selectedIndex)="getSelectedIndex($event)" 
+        [notifier]="tableData" 
+        [tableHeaderData]="headerData" 
+        (nextPage)="nextPageSetting($event,this,nextPage)"></app-table>
+    </div> 
+</div>
+<ngx-loading [show]="isVisible" [config]="{ backdropBorderRadius: '3px'}" [template]="customLoadingTemplate">
+</ngx-loading>

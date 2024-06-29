@@ -1,0 +1,39 @@
+<div style="background: white;padding:5px">
+  <!-- <nz-divider nzDashed [nzText]="text">
+    <ng-template #text>
+      <span nz-icon nzType="plus"></span>
+      Add
+    </ng-template>
+  </nz-divider> -->
+  <nz-divider nzDashed [nzText]="text">
+    <ng-template #text>
+      New Product
+    </ng-template>
+  </nz-divider>
+  <div nz-row [nzGutter]="8" >
+    <ng-container *ngFor="let data of tableData">
+      <ng-container *ngFor="let key of tableHeaderData" >   
+        <div nz-col [nzSpan]="12">
+          <nz-card nzHoverable [nzCover]="coverTemplate" [nzActions]="[actionSetting, actionEdit, actionEllipsis]">
+            <nz-card-meta [nzTitle]="data[key.title] + ' - RM' + data[key.price]" [nzDescription]="data[key.desc]"></nz-card-meta>
+          </nz-card>        
+          <ng-template #coverTemplate>
+            <img style="width:100%;height:300px"  [src]="formatImage(data[key.image])" />   
+          </ng-template>
+          <ng-template #avatarTemplate>
+            <nz-avatar nzSrc="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+          </ng-template>
+          <ng-template #actionSetting>
+            <span nz-icon nzType="setting"></span>
+          </ng-template>
+          <ng-template #actionEdit>
+            <span nz-icon nzType="edit"></span>
+          </ng-template>
+          <ng-template #actionEllipsis>
+            <span nz-icon nzType="ellipsis"></span>
+          </ng-template>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

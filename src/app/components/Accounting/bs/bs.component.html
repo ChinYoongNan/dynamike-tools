@@ -1,0 +1,271 @@
+<div class="contain-inter" >
+    <div class="site-page-header-ghost-wrapper">
+        <nz-page-header >
+          <nz-page-header-title>
+            <h3 class="center-text">
+              DYNAMIKE ENTERPRISE  (201903294031)          
+            </h3>  
+            <h2 class="center-text">
+              Statement Of Finanial Position FOR THE YEAR  - 
+              <ng-container *ngIf="month">{{monthString}} / </ng-container>
+              {{yearString}}
+            </h2>  
+          </nz-page-header-title>
+          <nz-page-header-extra>
+            <button nz-button nzType="primary" (click)="generateStatement()"  ><i nz-icon nzType="reload"></i>View Statement</button>
+          </nz-page-header-extra>        
+        </nz-page-header>
+      </div>
+      <div>
+        <div style="width:100%">
+          <div style="width:100%">
+            <div nz-row style="display: flex;width: 100%;">
+                <div style="width: 50%;">   
+                    <label class="displayText">Year: </label>
+                    <nz-date-picker style="width:100%" nzMode="year"  (ngModelChange)="AccountYearChange($event)"
+                    [nzDisabledDate]="disabledDate" nzFormat="yyyy"[(ngModel)]="year"></nz-date-picker> 
+                    
+                </div>
+                <div style="width:50%">
+                  <label class="displayText">Month：</label>
+                  <nz-date-picker style="width:100%" nzMode="month" [(ngModel)]="month" (ngModelChange)="AccountMonthChange($event)" nzFormat="MMM"></nz-date-picker>
+              </div> 
+            </div>
+        </div>
+        
+      <div style="text-wrap:wrap">       
+        
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <style>
+            .top-ft-bottom-outer-style{
+              border-style: solid solid solid solid;
+              font-weight: bold;
+            }
+            .top-ft-style{
+              border-style: solid none solid solid;
+              font-weight: bold;
+            }
+          </style>
+            <div nz-col  [nzSpan]="6" class="gutter-row" ></div>
+            <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" >Cost</div>
+            <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" >Acc Deprn</div>
+            <div nz-col  [nzSpan]="3" class="gutter-row top-ft-bottom-outer-style" >Net Book Value</div>
+            <div nz-col  [nzSpan]="3" class="gutter-row" ></div>
+        </div>  
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+            <div nz-col  [nzSpan]="6" class="gutter-row top-ft-style" >NON-CURRENT ASSETS</div>
+            <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" >RM</div>
+            <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" >RM</div>
+            <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" >RM</div>
+            <div nz-col  [nzSpan]="3" class="gutter-row top-ft-bottom-outer-style" >RM</div>
+        </div> 
+        <style>            
+          .outer-style{
+            border-style: none none none solid;
+          }
+          .total-outer-style{
+            border-style: none none none solid;
+          }
+          .subtotal-total-style{
+            border-style: solid none none solid;
+            font-weight: bold;
+          }
+          .subtotal-style{
+            border-style: solid none none none;
+            font-weight: bold;
+          }
+          .grandtotal-style{
+            border-style: outset none double solid;
+          }
+          .title{
+            font-weight: bold;
+          }
+          .lt-style{
+            border-style: none solid none none;
+          }
+          .subtotal-lt-style{
+            border-style: solid solid none none ;
+            font-weight: bold;
+          }
+          .space{
+            min-height:10px;
+          }
+        </style>
+        <ng-container *ngFor="let a of nca, let i = index">
+          <ng-container *ngFor="let o of a.outlet, let j = index">
+            <ng-container *ngIf="o.accountings && o.accountings.length >0">
+              <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+                <div nz-col  class="gutter-row outer-style" [nzSpan]="6" [ngClass]="{'space' : o.type =='space', 'title' : o.type=='total' || o.type == 'title'}" >{{o.name}}</div>
+                <div nz-col  class="gutter-row total-outer-style" [nzSpan]="3"  [ngClass]="{'space' : o.type =='space', 'title' : o.type=='total' || o.type == 'title'}"></div>
+                <div nz-col  class="gutter-row " [nzSpan]="3"   ></div>
+                <div nz-col  class="gutter-row" [nzSpan]="3"   ></div>
+                <div nz-col  class="gutter-row lt-style" [nzSpan]="3" >              
+                </div>
+              </div>
+              <ng-container *ngFor="let d of o.accountings, let h = index">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+                    <div nz-col  class="gutter-row outer-style" [nzSpan]="6" [ngClass]="{'space' : d.type =='space', 'title' : d.type=='total' || d.type == 'title'}" >{{d.name}} {{d.year}}</div>
+                    <div nz-col  class="gutter-row total-outer-style" [nzSpan]="3"  [ngClass]="{'space' : d.type =='space', 'title' : d.type=='total' || d.type == 'title'}">{{d.cost.toFixed(2)}}</div>
+                    <div nz-col  class="gutter-row " [nzSpan]="3"   >{{d.amount.toFixed(2)}}</div>
+                    <div nz-col  class="gutter-row" [nzSpan]="3"   >{{d.netValue.toFixed(2) }}</div>
+                    <div nz-col  class="gutter-row lt-style" [nzSpan]="3" >{{(d.amount/12).toFixed(2) }}</div>
+                </div>
+              </ng-container> 
+            </ng-container>
+          </ng-container> 
+        </ng-container>
+                      
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <div nz-col  [nzSpan]="6" class="gutter-row top-ft-style" >TOTAL NON-CURRENT ASSETS</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" >{{balancesheet.accdep.toFixed(2)}}</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" >{{balancesheet.nca.toFixed(2)}}</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-bottom-outer-style" ></div> 
+        </div>  
+        <ng-container *ngFor="let a of ca, let i = index">
+          <ng-container *ngFor="let o of a.outlet, let j = index">
+            <ng-container *ngIf="o.accountings && o.accountings.length >0">
+              <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+                <div nz-col  class="gutter-row outer-style" [nzSpan]="6" [ngClass]="{'space' : o.type =='space', 'title' : o.type=='total' || o.type == 'title'}" >{{a.name}}</div>
+                <div nz-col  class="gutter-row total-outer-style" [nzSpan]="3"  [ngClass]="{'space' : o.type =='space', 'title' : o.type=='total' || o.type == 'title'}"></div>
+                <div nz-col  class="gutter-row " [nzSpan]="3"   ></div>
+                <div nz-col  class="gutter-row" [nzSpan]="3"   >
+                  <span *ngIf="o.id == '18'">{{balancesheet.bank.toFixed(2)}} , {{balancesheet.cash.toFixed(2)}} , {{balancesheet.coin.toFixed(2)}}</span>
+                  <span *ngIf="o.id == '45'">{{balancesheet.deposit.toFixed(2)}}</span>
+                </div>
+                <div nz-col  class="gutter-row lt-style" [nzSpan]="3" ></div>
+              </div>
+              <ng-container *ngFor="let d of o.accountings, let j = index">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+                    <div nz-col  class="gutter-row outer-style" [nzSpan]="6" [ngClass]="{'space' : d.type =='space', 'title' : d.type=='total' || d.type == 'title'}" >{{d.name}}</div>
+                    <div nz-col  class="gutter-row total-outer-style" [nzSpan]="3"  [ngClass]="{'space' : d.type =='space', 'title' : d.type=='total' || d.type == 'title'}"></div>
+                    <div nz-col  class="gutter-row " [nzSpan]="3"   >{{d.amount.toFixed(2)}}</div>
+                    <div nz-col  class="gutter-row" [nzSpan]="3"   ></div>
+                    <div nz-col  class="gutter-row lt-style" [nzSpan]="3" ></div>
+                </div>
+              </ng-container> 
+            </ng-container> 
+          </ng-container> 
+        </ng-container>
+                      
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <div nz-col  [nzSpan]="6" class="gutter-row top-ft-style" >TOTAL ASSETS</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" >{{balancesheet.getCA()}}</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" >{{balancesheet.getTotalAsset()}}</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-bottom-outer-style" ></div> 
+        </div>  
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <div nz-col  [nzSpan]="6" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-bottom-outer-style" >{{balancesheet.getDifferences()}}</div>
+        </div>
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <div nz-col  [nzSpan]="6" class="gutter-row top-ft-style" >Equity</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" >{{balancesheet.getTotalEquity()}}</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-bottom-outer-style" ></div>
+        </div>
+
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <div nz-col  [nzSpan]="6" class="gutter-row top-ft-style" >Equity BF</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" >{{balancesheet.equity_BF.toFixed(2)}}</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-bottom-outer-style" ></div>
+        </div>
+        <ng-container *ngFor="let a of et, let i = index">
+            <ng-container *ngFor="let o of a.outlet, let j = index">
+              <ng-container *ngIf="o.accountings && o.accountings.length >0 ">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+                  <div nz-col  class="gutter-row outer-style" [nzSpan]="6" [ngClass]="{'space' : o.type =='space', 'title' : o.type=='total' || o.type == 'title'}" >{{a.name}}</div>
+                  <div nz-col  class="gutter-row total-outer-style" [nzSpan]="3"  [ngClass]="{'space' : o.type =='space', 'title' : o.type=='total' || o.type == 'title'}"></div>
+                  <div nz-col  class="gutter-row " [nzSpan]="3"   ></div>
+                  <div nz-col  class="gutter-row" [nzSpan]="3"   ></div>
+                  <div nz-col  class="gutter-row lt-style" [nzSpan]="3" ></div>
+                </div>
+                <ng-container *ngFor="let d of o.accountings, let h = index">
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+                      <div nz-col  class="gutter-row outer-style" [nzSpan]="6" [ngClass]="{'space' : d.type =='space', 'title' : d.type=='total' || d.type == 'title'}" >{{d.name}} - {{d.year}}</div>
+                      <div nz-col  class="gutter-row total-outer-style" [nzSpan]="3"  [ngClass]="{'space' : d.type =='space', 'title' : d.type=='total' || d.type == 'title'}">{{d.amount.toFixed(2)}}</div>
+                      <div nz-col  class="gutter-row " [nzSpan]="3"   ></div>
+                      <div nz-col  class="gutter-row" [nzSpan]="3"   ></div>
+                      <div nz-col  class="gutter-row lt-style" [nzSpan]="3" ></div>
+                  </div>
+                </ng-container> 
+              </ng-container>
+            </ng-container> 
+        </ng-container>
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <div nz-col  [nzSpan]="6" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-bottom-outer-style" ></div>
+        </div>
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <div nz-col  [nzSpan]="6" class="gutter-row top-ft-style" >RETAINED EARNING</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" >{{balancesheet.profit.toFixed(2)}}</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-bottom-outer-style" ></div>
+        </div>
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <div nz-col  [nzSpan]="6" class="gutter-row top-ft-style" >Liabilities</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" >{{balancesheet.getTotalLiabilities()}}</div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-style" ></div>
+          <div nz-col  [nzSpan]="3" class="gutter-row top-ft-bottom-outer-style" ></div>
+        </div>
+        <ng-container *ngFor="let a of lb, let i = index">
+          <ng-container *ngFor="let o of a.outlet, let j = index">
+            <ng-container *ngIf="o.accountings && o.accountings.length >0">
+              <!-- <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+                <div nz-col  class="gutter-row outer-style" [nzSpan]="6" [ngClass]="{'space' : o.type =='space', 'title' : o.type=='total' || o.type == 'title'}" >{{a.name}}</div>
+                <div nz-col  class="gutter-row total-outer-style" [nzSpan]="3"  [ngClass]="{'space' : o.type =='space', 'title' : o.type=='total' || o.type == 'title'}"></div>
+                <div nz-col  class="gutter-row " [nzSpan]="3"   ></div>
+                <div nz-col  class="gutter-row" [nzSpan]="3"   ></div>
+                <div nz-col  class="gutter-row lt-style" [nzSpan]="3" ></div>
+              </div> -->
+              <ng-container *ngFor="let d of o.accountings, let j = index">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+                    <div nz-col  class="gutter-row outer-style" [nzSpan]="6" [ngClass]="{'space' : d.type =='space', 'title' : d.type=='total' || d.type == 'title'}" >{{d.name}}</div>
+                    <div nz-col  class="gutter-row total-outer-style" [nzSpan]="3"  [ngClass]="{'space' : d.type =='space', 'title' : d.type=='total' || d.type == 'title'}">{{d.amount.toFixed(2)}}</div>
+                    <div nz-col  class="gutter-row " [nzSpan]="3"   ></div>
+                    <div nz-col  class="gutter-row" [nzSpan]="3"   ></div>
+                    <div nz-col  class="gutter-row lt-style" [nzSpan]="3" ></div>
+                </div>
+              </ng-container> 
+            </ng-container> 
+          </ng-container> 
+        </ng-container>
+        <style>
+          .bottom-total-outer-style{
+            border-style: none none solid solid;
+            font-weight: bold;
+          }
+          .bottom-ft-outer-style{
+            border-style: none none solid solid;
+          }
+          .bottom-style{
+            border-style: none none solid none;
+          }
+          .bottom-lt-style{
+            border-style: none solid solid none;
+          }
+        </style>          
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+            <div nz-col  [nzSpan]="6" class="gutter-row bottom-ft-outer-style title" >TOTAL EQUITY AND LIABILITIES</div>
+            <div nz-col  [nzSpan]="3" class="gutter-row bottom-total-outer-style title" ></div>
+            <div nz-col  [nzSpan]="3" class="gutter-row bottom-style" ></div>
+            <div nz-col  [nzSpan]="3" class="gutter-row bottom-style" >{{balancesheet.getTotalETLB()}}</div>
+            <div nz-col  [nzSpan]="3" class="gutter-row bottom-lt-style" ></div>
+        </div>
+      </div>
+      </div>
+</div>
+<ngx-loading [show]="isVisible" [config]="{ backdropBorderRadius: '3px'}" [template]="customLoadingTemplate">
+</ngx-loading>

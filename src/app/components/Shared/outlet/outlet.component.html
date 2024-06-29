@@ -1,0 +1,20 @@
+<div style="width:100%">
+  <label class="displayText">Outlet / 分行 :</label>
+  <nz-form-item>
+      <nz-form-control nzErrorTip="Invoice Type is required!">
+      <nz-input-group>
+          <nz-select class="inputWidth" 
+              [(ngModel)]="outlet.id"     
+              (ngModelChange)="getOutlet($event)"
+              nzPlaceHolder="Select a Outlet">
+              <ng-container *ngFor="let p of outletType, let i = index">
+                  <nz-option *ngIf="outletType" [nzValue]="p.id" [nzLabel]="p.description"></nz-option>
+              </ng-container>
+              <nz-option *ngIf="!outletType" nzDisabled nzCustomContent>
+                  <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+              </nz-option>
+          </nz-select>        
+      </nz-input-group>
+      </nz-form-control>
+  </nz-form-item>        
+</div>

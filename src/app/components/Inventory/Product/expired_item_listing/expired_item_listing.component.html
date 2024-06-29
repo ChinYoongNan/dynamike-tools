@@ -1,0 +1,39 @@
+<div class="contain-inter">
+    <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+        <h2 style="float:left;"><span>查过期货品 Expired Item</span></h2>
+    </div>
+    <button id="checkedButton" style="display:none" (click)="confirmChecked()"></button>
+    <div class="tableShow-area"  style="height: fit-content;"
+        >
+        <style>
+            .displayText{
+                width:250px;
+            }
+            .inputWidth{
+                width:95%;
+            }
+        </style>
+        <div class="tableShow-table">
+            <div style="width:100%">
+                <div nz-row style="display: flex;width: 100%;">
+                    <div style="width: 100%;">   
+                        <label class="displayText">Year: </label>
+                        <nz-date-picker style="width:100%" nzMode="year"  (ngModelChange)="YearChange($event)" nzFormat="yyyy"[(ngModel)]="year"></nz-date-picker> 
+                        <div style="width:100%">
+                            <label class="displayText">Month：</label>
+                            <nz-date-picker style="width:100%" nzMode="month" [(ngModel)]="month" (ngModelChange)="AccountMonthChange($event)" nzFormat="MMM"></nz-date-picker>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <app-table 
+            [notifier]="tableData" 
+            (updatedData)="getUpdatedData($event)" 
+            (selectedIndex)="getSelectedIndex($event)"
+            [tableSettings]="tableSettings" 
+            (nextPage)="nextPageSetting($event)" 
+            [tableHeaderData]="headerData"
+            ></app-table>
+        </div>
+    </div>
+</div>

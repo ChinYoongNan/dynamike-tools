@@ -1,0 +1,110 @@
+<div *ngIf="tableData && tableData.length>0 else noFoundTemplate" style="background: white;padding:0px; box-shadow: 1px 0 0 0 #f0f0f0, 0 1px 0 0 #f0f0f0, 1px 1px 0 0 #f0f0f0, 1px 0 0 0 #f0f0f0 inset, 0 1px 0 0 #f0f0f0 inset;">
+  <!-- <nz-divider nzDashed [nzText]="text">
+    <ng-template #text>
+      Listing
+    </ng-template>
+  </nz-divider> -->
+  <nz-list [nzDataSource]="tableData" nzItemLayout="horizontal" nzGrid>
+    <div nz-row  *ngFor="let data of tableData" style="border-radius: 0;
+    box-shadow: 1px 0 0 0 #f0f0f0, 0 1px 0 0 #f0f0f0, 1px 1px 0 0 #f0f0f0, 1px 0 0 0 #f0f0f0 inset, 0 1px 0 0 #f0f0f0 inset;">
+        <nz-list-item style="width:100%;"> 
+          <!-- <nz-list-header *ngIf="tableHeaderData[0].type == 'image'">             
+              <img *ngIf="!tableHeaderData[0].value" style="width:100px;height:100px"  [src]="formatImage(data[tableHeaderData[0].column])" />   
+              <img *ngIf="tableHeaderData[0].value" style="width:100px;height:100px"  [src]="formatImage(getValue(data,tableHeaderData[0].value))" />   
+          </nz-list-header>  -->
+          <nz-list-item-meta 
+            nzDescription=""
+          >
+          <!-- <nz-list-item-meta
+            nzAvatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+            nzDescription="Ant Design, a design language for background applications, is refined by Ant UED Team"
+          > -->   
+                    
+                
+            <nz-list-item-meta-title>  
+              <div nz-row [nzGutter]="24" style="padding-left: 5px;padding-right: 5px;"> 
+                <ng-container *ngIf="tableHeaderData[0].type == 'image'"> 
+                  <div nz-col [nzSpan]="8" >            
+                    <img *ngIf="!tableHeaderData[0].value" style="width:100px;height:100px"  [src]="formatImage(data[tableHeaderData[0].column])" />   
+                    <img *ngIf="tableHeaderData[0].value" style="width:100px;height:100px"  [src]="formatImage(getValue(data,tableHeaderData[0].value))" />   
+                  </div>
+                </ng-container>     
+                <div nz-col [nzSpan]="16" style="display: inline-grid;">
+                  <ng-container *ngFor="let key of tableHeaderData, let i = index" > 
+                    <ng-template #nonvalidTemplate>
+                      <ng-container *ngIf="key.type != 'image'"> 
+                        <span *ngIf="!key.value && !key.nestedColumn">
+                          <ng-contianer *ngIf="key.type != 'display' && key.type != 'displayArray' else dislayBooleanTemplate">{{key.header}}{{data[key.column]}}</ng-contianer>
+                           <button style="float:right" *ngIf="i == 1 && tableSettings.Action.View && tableSettings.Action.View.function" nz-button nzType="primary" (click)="viewButton(data.id)" ><i nz-icon nzType="right-circle"></i></button></span>                        
+                        <span *ngIf="!key.value && key.nestedColumn">{{key.header}}{{data[key.column][key.nestedColumn]}} <button style="float:right" *ngIf="i == 1 && tableSettings.Action.View && tableSettings.Action.View.function" nz-button nzType="primary" (click)="viewButton(data.id)" ><i nz-icon nzType="right-circle"></i></button></span> 
+                        <span *ngIf="key.value">{{key.header}}{{getValue(data,key.value)}} <button style="float:right" *ngIf="i == 1 && tableSettings.Action.View && tableSettings.Action.View.function" nz-button nzType="primary" (click)="viewButton(data.id)" ><i nz-icon nzType="right-circle"></i></button></span>
+                      </ng-container> 
+                    </ng-template>
+                    <ng-template #dislayBooleanTemplate>
+                      <ng-container *ngIf="key.type == 'display'"> 
+                        
+                        <span [style.color]="(data[key.column].length>0) ? 'red' : ''">{{data[key.column]}}</span>
+                      </ng-container>
+                      <ng-container *ngIf="key.type=='displayArray'">
+                        <span *ngIf="data[key.column].length>0">
+                          <ng-container *ngFor="let a of data[key.column]" > 
+                          {{a[key.array]}} 
+                          </ng-container>
+                        </span>
+                        <span *ngIf="data[key.column].length==0" style="color:red">none</span>
+                      </ng-container>
+                    </ng-template>
+                    
+                     <ng-container *ngIf="key.valid else nonvalidTemplate">
+                       <nz-switch [ngModel]="!data[key.column]" nzType="primary" nz-button (ngModelChange)="updateValid(key.column,data.id,$event)"></nz-switch>
+                     </ng-container>   
+                  </ng-container> 
+                </div>
+              </div>  
+              <div nz-row [nzGutter]="24" style="padding-left: 15px;display: none;"> 
+                <div nz-col [nzSpan]="8" >     
+                </div>
+                <div nz-col [nzSpan]="20" style="display:inline-table">
+                  <ng-container *ngIf="tableSettings.Delete" >
+                    <!-- <div nz-col [nzSpan]="4" style="float:right"> -->
+                      
+                      <td *ngIf="tableSettings.Delete">
+                        <button nz-button nzType="primary" nz-popconfirm nzPopconfirmTitle="Sure to Delete?" (nzOnConfirm)="deleteButton(data.id)"  nzDanger ><i nz-icon nzType="delete"></i></button>
+                      </td>   
+                    <!-- </div> -->
+                  </ng-container>                  
+                  <ng-container *ngIf="tableSettings && tableSettings.Action" >
+                    <!-- <div nz-col [nzSpan]="4" style="float:right"> -->
+                      <button *ngIf="tableSettings.Action.Update && tableSettings.Action.Update.function" nz-button nzType="primary" (click)="startEdit(data.id)"  ><i nz-icon nzType="edit"></i></button>
+                      <button *ngIf="expandProperty &&  tableSettings && tableSettings.Delete && tableSettings.Delete.function" nz-button nzType="primary" nz-popconfirm nzPopconfirmTitle="Sure to Delete?" (nzOnConfirm)="deleteButton(data.id)"  nzDanger ><i nz-icon nzType="delete"></i></button>
+                      
+                      <ng-container *ngFor="let btn of tableSettings.Action.Buttons" >  
+                        <button nzType="primary" nz-button (click)="buttonsEvent(data.id,btn.function)" ><i nz-icon nzType="{{btn.icon}}" nzTheme="outline"></i></button>                    
+                      </ng-container>
+                                    
+                      <button style="float:right" *ngIf="tableSettings.Action.View && tableSettings.Action.View.function" nz-button nzType="primary" (click)="viewButton(data.id)" ><i nz-icon nzType="right-circle"></i></button>
+                    <!-- </div> -->
+                  </ng-container>
+                </div>
+              </div>
+            </nz-list-item-meta-title>
+          </nz-list-item-meta>
+      </nz-list-item>
+    </div>
+  </nz-list> 
+  <nz-divider nzDashed [nzText]="pagination">
+    <ng-template #pagination>
+      <nz-pagination             
+      [nzTotal]="paginationData.totalElements"
+      [nzPageIndex]="paginationData.pageable.pageNumber+1"
+      [nzPageSize]="+paginationData.pageable.pageSize"
+      (nzPageIndexChange)="pageChange($event)"  
+      nzSimple></nz-pagination>   
+    </ng-template>
+  </nz-divider>  
+</div>
+<ng-template #noFoundTemplate>
+  <div *ngIf="tableData && tableData.length==0" style="background: white;padding:0px; box-shadow: 1px 0 0 0 #f0f0f0, 0 1px 0 0 #f0f0f0, 1px 1px 0 0 #f0f0f0, 1px 0 0 0 #f0f0f0 inset, 0 1px 0 0 #f0f0f0 inset;">
+  <H1>NO RECORD FOUND</H1>
+  </div>
+</ng-template>

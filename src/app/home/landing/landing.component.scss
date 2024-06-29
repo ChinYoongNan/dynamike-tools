@@ -1,0 +1,46 @@
+.headerInfo{
+  background: linear-gradient(
+    to top,
+    white 0%,
+    white 50%,
+    #df6317 50%,
+    #df6317 100%
+  );padding:5px;  
+  background-color: #df6317
+}
+.menuRow{    
+  display:inline-flex;
+  border: #df6317 0.5px solid;
+  background-color: white;
+}
+.menuDiv{    
+  height: 80px;
+  text-align: center;
+  background-color: white;
+}
+.menuIcon{
+  font-size: 36px;
+  margin: 12px 0 8px;
+  transition: transform .3s ease-in-out;
+  will-change: transform;
+}
+.menuLabel{
+  display: block;
+  font-family: Lucida Console,Consolas,Monaco,Andale Mono,Ubuntu Mono,monospace;
+  white-space: nowrap;
+  text-align: center;
+  transform: scale(.83);
+}
+img {      
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 385px
+  }
+  div {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width:100%;
+    max-width: 385px
+  }

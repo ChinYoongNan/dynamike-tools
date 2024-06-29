@@ -1,0 +1,87 @@
+<div style="background: white;padding:5px">
+  <nz-divider nzDashed [nzText]="text">
+    <ng-template #text>
+      <span nz-icon nzType="scissor"></span>
+      Voucher
+    </ng-template>
+  </nz-divider>
+  <style>
+    .bshadow {
+    display: grid;
+    align-items: right;
+    justify-content: right;
+    margin:0px;
+    padding: 0px;
+    /* filter: drop-shadow(5px 5px 5px #222222); */
+    /* opacity: .5; */
+    }
+    /* .ant-list-item{
+      display:block;
+
+    } */
+  </style>
+  <!-- <div nz-row [nzGutter]="24" >     
+    <ng-container *ngFor="let data of tableData">
+      <ng-container *ngFor="let key of tableHeaderData" >   
+        <div nz-col [nzSpan]="24">
+          <nz-card nzHoverable [nzCover]="coverTemplate">
+            <nz-card-meta [nzTitle]="data[key.title] + ' - RM' + data[key.price]" [nzDescription]="data[key.desc]"></nz-card-meta>
+          </nz-card>        
+        </div>
+      </ng-container>
+    </ng-container>
+  </div> -->
+  <div nz-row [nzGutter]="24" >  
+      <div nz-col [nzSpan]="24" >
+        <nz-card nzHoverable>
+          <!-- <nz-list nzItemLayout="horizontal" [nzLoading]="loading"> -->
+            <nz-list nzItemLayout="horizontal">
+            <nz-list-item  *ngFor="let data of tableData"> 
+              <!-- <div style="background-size: cover;background-repeat: no-repeat;background-image: url('https://drive.google.com/thumbnail?id=1kTFM2HMTs6g4cy316EphFu9iIkueGQEm');"> -->
+              <!-- <div style="background-color: orangered;"> -->
+                <!-- <nz-list-item-meta *ngIf="key.value">{{getValue(data,key.value)}} </nz-list-item-meta>   -->
+                <nz-list-item-meta 
+                  nzDescription=""
+                >
+                <!-- <nz-list-item-meta
+                  nzAvatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                  nzDescription="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                > -->
+                  <nz-list-item-meta-title>                    
+                    <!-- <img src="https://drive.google.com/thumbnail?id=1kTFM2HMTs6g4cy316EphFu9iIkueGQEm"/> -->
+                    <ng-container *ngFor="let key of tableHeaderData" >
+                    <ng-container *ngIf="key.type!='barcode'"> 
+                      <a *ngIf="!key.value && key.header">{{key.header}} : {{data[key.column]}}</a><br/>
+                      <a *ngIf="!key.value && !key.header">{{data[key.column]}}</a><br/>
+                      <a *ngIf="key.value">{{key.header}} : {{getValue(data,key.value)}}</a><br/>
+                    </ng-container>  
+                    <ng-container *ngIf="key.type=='barcode'">   
+                      <div class="bshadow" >                    
+                        <ngx-barcode 
+                        [bc-element-type]="elementType"
+                        [bc-value]="data[key.column]" [bc-width]="1" [bc-height]="50" 
+                        [bc-margin]="margin" [bc-display-value]="true"></ngx-barcode>
+                      </div>
+                    </ng-container>  
+                    </ng-container>
+                    <ng-container *ngIf="tableSettings && tableSettings.Action" >
+                      <button *ngIf="tableSettings.Action.Update" nz-button nzType="primary" (click)="startEdit(data.id)"  ><i nz-icon nzType="edit"></i></button>
+                      <button *ngIf="expandProperty &&  tableSettings && tableSettings.Delete" nz-button nzType="primary" nz-popconfirm nzPopconfirmTitle="Sure to Delete?" (nzOnConfirm)="deleteButton(data.id)"  nzDanger ><i nz-icon nzType="delete"></i></button>
+                      
+                      <ng-container *ngFor="let btn of tableSettings.Action.Buttons" >  
+                        <button nzType="primary" nz-button (click)="buttonsEvent(data.id,btn.function)" ><i nz-icon nzType="{{btn.icon}}" nzTheme="outline"></i></button>                    
+                      </ng-container>
+                                    
+                      <button style="float:right" *ngIf="tableSettings.Action.View" nz-button nzType="primary" (click)="viewButton(data.id)" ><i nz-icon nzType="right-circle"></i></button>
+                    </ng-container> 
+                  </nz-list-item-meta-title>
+                </nz-list-item-meta>
+              <!-- </div> -->
+            </nz-list-item>
+            <!-- <nz-list-empty *ngIf="data.length === 0"></nz-list-empty> -->
+          </nz-list>
+          <!-- <nz-card-meta [nzTitle]="data[key.title]" [nzDescription]="data[key.desc]"></nz-card-meta> -->
+        </nz-card>        
+      </div>
+  </div>
+</div>

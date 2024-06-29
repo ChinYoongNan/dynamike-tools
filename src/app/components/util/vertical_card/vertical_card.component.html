@@ -1,0 +1,91 @@
+<div style="background: white;padding:5px">
+  <nz-divider nzDashed [nzText]="text">
+    <ng-template #text>
+      <!-- <span nz-icon nzType="scissor"></span> -->
+      Listing
+    </ng-template>
+  </nz-divider>
+  <nz-list [nzDataSource]="tableData" nzItemLayout="horizontal" nzGrid>
+    <div nz-row [nzGutter]="12">
+      <div nz-col [nzSpan]="8" *ngFor="let data of tableData"style="border-radius: 0;
+      box-shadow: 1px 0 0 0 #f0f0f0, 0 1px 0 0 #f0f0f0, 1px 1px 0 0 #f0f0f0, 1px 0 0 0 #f0f0f0 inset, 0 1px 0 0 #f0f0f0 inset;">
+          <nz-list-item style="width:100%;"> 
+            <nz-list-item-meta 
+              nzDescription=""
+            >  
+              <nz-list-item-meta-title>  
+                <div nz-row [nzGutter]="16" style="display:inline-flex" *ngIf="tableHeaderData[0].type == 'image'"> 
+                  <ng-container>    
+                    <div nz-col [nzSpan]="24" >                     
+                      <img *ngIf="!tableHeaderData[0].value" style="width:100px;height:100px"  [src]="formatImage(data[tableHeaderData[0].column])" />   
+                      <img *ngIf="tableHeaderData[0].value" style="width:100px;height:100px"  [src]="formatImage(getValue(data,tableHeaderData[0].value))" />   
+                    </div>
+                  </ng-container> 
+                </div>
+                <div nz-row [nzGutter]="24" style="display:inline-flex">     
+                  <ng-container *ngIf="tableHeaderData[0].type == 'image'">  
+                    <div nz-col  style="display: inline-grid;">
+                      <ng-container *ngFor="let key of tableHeaderData" > 
+                          <!-- <div nz-col [nzSpan]="18" *ngIf="key.type != 'image'"> -->
+                          <ng-container *ngIf="key.type != 'image'"> 
+                              <span *ngIf="!key.value">{{key.header}} : {{data[key.column]}}</span>
+                              <span *ngIf="key.value">{{key.header}} : {{getValue(data,key.value)}}</span>
+                            <!-- </div> -->
+                          </ng-container> 
+                      </ng-container> 
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="tableHeaderData[0].type != 'image'">  
+                    <div nz-col style="display: inline-grid;">
+                      <ng-container *ngFor="let key of tableHeaderData" > 
+                          <!-- <div nz-col [nzSpan]="18" *ngIf="key.type != 'image'"> -->
+                          <ng-container *ngIf="key.type != 'image'"> 
+                              <span *ngIf="!key.value">{{key.header}} : {{data[key.column]}}</span>
+                              <span *ngIf="key.value">{{key.header}} : {{getValue(data,key.value)}}</span>
+                            <!-- </div> -->
+                          </ng-container> 
+                      </ng-container> 
+                    </div>
+                  </ng-container>
+                </div>                    
+                <div nz-row [nzGutter]="16" style="display:inline-flex"> 
+                  <div nz-col [nzSpan]="2" style="float:right; display:inline-table">
+                    <ng-container *ngIf="tableSettings.Delete" >
+                      <!-- <div nz-col [nzSpan]="4" style="float:right"> -->
+                        
+                        <td *ngIf="tableSettings.Delete">
+                          <button nz-button nzType="primary" nz-popconfirm nzPopconfirmTitle="Sure to Delete?" (nzOnConfirm)="deleteButton(data.id)"  nzDanger ><i nz-icon nzType="delete"></i></button>
+                        </td>   
+                      <!-- </div> -->
+                    </ng-container>                  
+                    <ng-container *ngIf="tableSettings && tableSettings.Action" >
+                      <!-- <div nz-col [nzSpan]="4" style="float:right"> -->
+                        <button *ngIf="tableSettings.Action.Update" nz-button nzType="primary" (click)="startEdit(data.id)"  ><i nz-icon nzType="edit"></i></button>
+                        <button *ngIf="expandProperty &&  tableSettings && tableSettings.Delete" nz-button nzType="primary" nz-popconfirm nzPopconfirmTitle="Sure to Delete?" (nzOnConfirm)="deleteButton(data.id)"  nzDanger ><i nz-icon nzType="delete"></i></button>
+                        
+                        <ng-container *ngFor="let btn of tableSettings.Action.Buttons" >  
+                          <button nzType="primary" nz-button (click)="buttonsEvent(data.id,btn.function)" ><i nz-icon nzType="{{btn.icon}}" nzTheme="outline"></i></button>                    
+                        </ng-container>
+                                      
+                        <button style="float:right" *ngIf="tableSettings.Action.View" nz-button nzType="primary" (click)="viewButton(data.id)" ><i nz-icon nzType="right-circle"></i></button>
+                      <!-- </div> -->
+                    </ng-container>                 
+                  </div>
+                </div>
+              </nz-list-item-meta-title>
+            </nz-list-item-meta>
+        </nz-list-item>
+      </div>
+    </div>
+  </nz-list> 
+  <nz-divider nzDashed [nzText]="pagination">
+    <ng-template #pagination>
+      <nz-pagination             
+      [nzTotal]="paginationData.totalElements"
+      [nzPageIndex]="paginationData.pageable.pageNumber+1"
+      [nzPageSize]="+paginationData.pageable.pageSize"
+      (nzPageIndexChange)="pageChange($event)"  
+      nzSimple></nz-pagination>   
+    </ng-template>
+  </nz-divider>  
+</div>

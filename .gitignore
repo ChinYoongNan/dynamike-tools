@@ -1,0 +1,9 @@
+# Compiled class file
+www/*
+metadata/*
+plugins/*
+platforms/*
+dynamike/*
+node_modules
+com.dynamike.app-win32-x64/*
+.metadata/*

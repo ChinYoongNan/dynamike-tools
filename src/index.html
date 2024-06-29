@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="msapplication-tap-highlight" content="no" />
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, min-width=device-width, min-height=device-height, target-densitydpi=device-dpi" />
+
+  <title>DYNAMIKE System</title>
+  <base href="/">
+</head>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- <script src="../../../assets/html5-qrcode.min.js"></script> -->
+<script type="text/javascript" src="cordova.js"></script>
+<body>
+<!-- Cashier Drawer -->
+<script>  
+  try{    
+        var SerialPort = require('serialport').SerialPort;
+        var sp;
+        var serialPort = require('serialport');
+        serialPort.SerialPort.list().then(function(ports){
+            ports.forEach(function(port){
+                // if (port.manufacturer && port.manufacturer.includes('"Prolific"')) {
+                    port.baudRate = 115200;
+                    console.log(port);
+                    let openedPort = new SerialPort(port, err => {
+                        if (err) {
+                        return console.log('Error: ', err.message);
+                        }
+                    },{
+                        baudRate: 9600,
+                    })
+                    sp = openedPort;
+                    console.log('setport');
+                // }
+            })
+        });
+      } catch(e){
+        console.log(e);
+      }
+    function writeonSer(data){
+        //Write the data to serial port.
+        sp.write( data, function(err) {
+            if (err) {
+                return console.log('Error on write: ', err.message);
+            }
+            console.log('message written');
+        });
+    }
+</script> 
+<script src="../autoupdater.js"></script>
+
+<!-- <button  onClick="checkUpdate()">Check Updates</button> -->
+<app-root></app-root>
+
+<!-- Google Admod -->
+<script>
+	// let banner
+	// document.addEventListener('deviceready', async () => {
+	// 	banner = new admob.BannerAd({
+	// 	  adUnitId: 'ca-app-pub-6309482425205656/9730261225',
+	// 	  position: 'bottom',
+	// 	  offset: 0,
+	// 	})
+		
+	// 	admob.BannerAd.config({
+	// 	  marginTop: 88,
+	// 	  marginBottom: 34
+	// 	})
+		
+	// 	banner.on('impression', async (evt) => {
+	// 		// await banner.hide()
+	// 	})
+
+	// 	await banner.show()
+	// }, false);
+	
+	// document.getElementById("interstitial").addEventListener('click', async function(){
+	// 	interstitial = new admob.InterstitialAd({
+	// 		adUnitId: 'ca-app-pub-6309482425205656/7697697085',
+	// 	})
+
+	// 	interstitial.on('load', (evt) => {
+	// 		// evt.ad
+	// 	})
+
+	//   await interstitial.load()
+	//   await interstitial.show()
+	// });
+	// document.getElementById("banner").addEventListener('click', function(){
+	// 	banner = new admob.BannerAd({
+	// 		adUnitId: 'ca-app-pub-6309482425205656/9730261225',
+	// 	position: 'top',
+	// 	offset: 1000,
+	// 	})
+
+	// 	banner.on('impression', async (evt) => {
+	// 		banner.hide()
+	// 	})
+
+	// 	banner.show()
+	// });
+</script>
+        
+</body>
+
+<script>
+  (function(){
+    if(!!window.ActiveXObject || "ActiveXObject" in window){
+        alert("This system does not support IE temporarily")
+    }
+  })()
+</script>
+
+</html>

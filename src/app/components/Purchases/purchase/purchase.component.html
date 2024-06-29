@@ -1,0 +1,283 @@
+<app-page-header [HeaderItems]="pageHeader" (initPage)="reset()"></app-page-header>  
+
+<button id="saveAccountButton" style="display:none" (click)="savePurchase()"></button> 
+<button id="undoButton" style="display:none" (click)="updateStatus('bank')"></button> 
+<button id="bankButton" style="display:none" (click)="updateStatus('bank')"></button> 
+<button id="cashButton" style="display:none" (click)="updateStatus('cash')"></button> 
+<button id="saveButton" style="display:none" (click)="savePurchase()"></button> 
+<div class="tableShow-area"  style="height: fit-content;">
+        <div class="tableShow-table">
+            <div *ngIf="showSupplier; else elseFormTemplate">
+                <div style="width:100%" [formGroup]="purchaseOrderForm">
+                    <div nz-row style="display: flex;width: 100%;">
+                        <div style="width: 100%;">                        
+                            <label class="displayText">Date / 日期 :</label>
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Purchase Date is required!">
+                                <nz-input-group>
+                                    <input nz-input type="date" [(ngModel)]="Purchase.date" formControlName="purchase_date"/>
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>  
+                        </div>
+                    </div>
+                    <div style="display: flex;width: 100%;margin-top: 10px;">
+                        <div style="width:50%">
+                            <label class="displayText">Invoice Type / 单类 :</label>
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Invoice Type is required!">
+                                <nz-input-group>
+                                    <nz-select class="inputWidth" [(ngModel)]="Purchase.type.id" nzShowSearch
+                                    formControlName="invoicetype_index" (ngModelChange)="InvoiceTypeChange($event)"                            
+                                        nzPlaceHolder="Select a Invoice Type">
+                                        <ng-container *ngFor="let p of InvoiceType, let i = index">
+                                            <nz-option *ngIf="InvoiceType" [nzValue]="p.id" [nzLabel]="p.description"></nz-option>
+                                        </ng-container>
+                                        <nz-option *ngIf="!InvoiceType" nzDisabled nzCustomContent>
+                                            <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                                        </nz-option>
+                                    </nz-select>        
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>        
+                        </div>
+                        <div style="width:50%">
+                            <app-outlet (getOutletEvent)="getOutlet($event)" [outletId]="Purchase.outlet.id"></app-outlet>
+                        </div>
+                        <div style="width:50%">
+                            <label class="displayText">Invoice No / 单号码 :</label>
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Invoice No is required!">
+                                <nz-input-group>
+                                    <input nz-input  [(ngModel)]="Purchase.invoiceNo" class="inputWidth" formControlName="invoice_no"/>
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>             
+                        </div>
+                    </div>
+                    <div style="display: flex;width: 100%;margin-top: 10px;">
+                        <div style="width:50%">
+                            <label class="displayText">Total / 总额 :</label>                    
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Total Amount is required!">
+                                <nz-input-group  nzSuffix="MYR" nzPrefix="RM">
+                                    <input nz-input type="number" formControlName="total_amount" [(ngModel)]="Purchase.totalAmount" (change)="amountChange($event)" />
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <div style="width:50%">
+                            <label class="displayText">Total Stock value /  总额 :</label>                    
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Total Amount is required!">
+                                <nz-input-group  nzSuffix="MYR" nzPrefix="RM">
+                                    <input nz-input formControlName="total_stockvalue" [(ngModel)]="totalStockValue" readonly />
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>                        
+                        <div style="width:50%">
+                            <label class="displayText">Bill To:</label> 
+                            <nz-input-group>     
+                                <nz-select formControlName="billTo" [(ngModel)]="billTo" style="width:100%"                            
+                                    (ngModelChange)="selectedBillTo($event)" 
+                                    nzPlaceHolder="Select a Staff">
+                                    <ng-container *ngFor="let p of staff_list;let i = index">
+                                        <nz-option [nzValue]="p.name" [nzLabel]="p.code + '-' + p.name"></nz-option>
+                                    </ng-container>
+                                    <nz-option></nz-option>
+                                </nz-select>
+                            </nz-input-group>   
+                        </div> 
+                        <div *ngIf="viewMode == 1" style="width:50%">
+                            <label class="displayText">Paid Amount /  已付额 :</label>                    
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Paid Amount is required!">
+                                <nz-input-group  nzSuffix="MYR" nzPrefix="RM">
+                                    <input nz-input formControlName="paidAmount" [(ngModel)]="paidAmount" />
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                    </div>
+                    <div style="display: flex;width: 100%;margin-top: 10px;" *ngIf="showLifeTime">
+                        <div style="width:50%">
+                            <label class="displayText">LifeTime :</label>                    
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Paid Amount is required!">
+                                <nz-input-group >
+                                    <input nz-input formControlName="lifeTime" (change)="depreciationCalculator($event)" [(ngModel)]="Purchase.lifeTime" />
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <div style="width:50%">
+                            <label class="displayText">End Year :</label>                    
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Paid Amount is required!">
+                                <nz-input-group >
+                                    <input nz-input formControlName="endYear" [(ngModel)]="Purchase.endYear" readonly/>
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <div style="width:50%">
+                            <label class="displayText">Deprecation Amount :</label>                    
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Paid Amount is required!">
+                                <nz-input-group >
+                                    <input nz-input formControlName="depreciation" [(ngModel)]="Purchase.depreciation" readonly/>
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                    </div>
+                    <div >
+                        <div nz-row style="display: flex;width: 100%;">
+                            <div style="width: 100%;">
+                                <label class="displayText">Supplier / 供应商 ：</label>
+                                <nz-form-item>
+                                    <nz-form-control nzErrorTip="Supplier Name is required!">
+                                    <nz-input-group>
+                                        <nz-select nzShowSearch class="inputWidth" formControlName="supplier_index"
+                                        [(ngModel)]="Purchase.supplier.id" (ngModelChange)="SupplierChange($event)"                            
+                                            nzPlaceHolder="Select a Supplier">
+                                            <!-- <nz-option nzCustomContent>
+                                                <button nzType="primary" nz-button
+                                                (click)="addSupplier()">Add New Supplier</button>
+                                            </nz-option> -->
+                                            <ng-container *ngFor="let p of Suppliers, let i = index">
+                                                <nz-option *ngIf="Suppliers" [nzValue]="p.id" [nzLabel]="p.name"></nz-option>
+                                            </ng-container>
+                                            <nz-option *ngIf="!Suppliers" nzDisabled nzCustomContent>
+                                                <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                                            </nz-option>
+                                        </nz-select>       
+                                    </nz-input-group>
+                                    </nz-form-control>
+                                </nz-form-item> 
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div> 
+            <app-product_list_selection [notifier]="purchase_Items" [category]="productCategory" [notifier_Id]="supplier_id" (seletedData)="getSeletedData($event)"></app-product_list_selection> 
+            <ng-template #elseFormTemplate>
+                <div  style="width:100%" [formGroup]="accountOrderForm">
+                    <div nz-row style="display: flex;width: 100%;">
+                        <div style="width: 100%;">                        
+                            <label class="displayText">Date / 日期 :</label>
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Purchase Date is required!">
+                                <nz-input-group>
+                                    <input nz-input type="date" [(ngModel)]="Purchase.date" formControlName="purchase_date"/>
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>  
+                        </div>
+                    </div>
+                    <div style="display: flex;width: 100%;margin-top: 10px;">
+                        <div style="width:50%">
+                            <label class="displayText">Invoice Type / 单类 :</label>
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Invoice Type is required!">
+                                <nz-input-group>
+                                    <nz-select class="inputWidth" [(ngModel)]="Purchase.type.id" nzShowSearch
+                                    formControlName="invoicetype_index" (ngModelChange)="InvoiceTypeChange($event)"                            
+                                        nzPlaceHolder="Select a Invoice Type">
+                                        <ng-container *ngFor="let p of InvoiceType, let i = index">
+                                            <nz-option *ngIf="InvoiceType" [nzValue]="p.id" [nzLabel]="p.description"></nz-option>
+                                        </ng-container>
+                                        <nz-option *ngIf="!InvoiceType" nzDisabled nzCustomContent>
+                                            <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                                        </nz-option>
+                                    </nz-select>        
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>        
+                        </div>
+                        <div style="width:50%">
+                            <app-outlet (getOutletEvent)="getOutlet($event)"></app-outlet>
+                        </div>
+                        <!-- <div style="width:50%">
+                            <label class="displayText">Outlet / 分行 :</label>
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Invoice Type is required!">
+                                <nz-input-group>
+                                    <nz-select class="inputWidth" [(ngModel)]="Purchase.outlet.id"    
+                                        formControlName="outlet"                 
+                                        nzPlaceHolder="Select a Outlet">
+                                        <ng-container *ngFor="let p of outletType, let i = index">
+                                            <nz-option *ngIf="outletType" [nzValue]="p.id" [nzLabel]="p.description"></nz-option>
+                                        </ng-container>
+                                        <nz-option *ngIf="!outletType" nzDisabled nzCustomContent>
+                                            <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                                        </nz-option>
+                                    </nz-select>        
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>        
+                        </div> -->
+                        <div style="width:50%">
+                            <label class="displayText">Invoice No / 单号码 :</label>
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Invoice No is required!">
+                                <nz-input-group>
+                                    <input nz-input  [(ngModel)]="Purchase.invoiceNo" class="inputWidth" formControlName="invoice_no"/>
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>             
+                        </div>
+                    </div>
+                    <div style="display: flex;width: 100%;margin-top: 10px;">
+                        <div style="width:50%">
+                            <label class="displayText">Total / 总额 :</label>                    
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Total Amount is required!">
+                                <nz-input-group  nzSuffix="MYR" nzPrefix="RM">
+                                    <input nz-input type="number" formControlName="total_amount" [(ngModel)]="Purchase.totalAmount" (change)="amountChange($event)" />
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>                        
+                        <div *ngIf="viewMode == 1" style="width:50%">
+                            <label class="displayText">Paid Amount /  已付额 :</label>                    
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Paid Amount is required!">
+                                <nz-input-group  nzSuffix="MYR" nzPrefix="RM">
+                                    <input nz-input formControlName="paidAmount" [(ngModel)]="paidAmount" />
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+            <div style="display: flex;width: 100%;margin-top: 10px;">
+                <div style="width:100%">
+                    <label class="displayText" style="vertical-align: top;">Particular / 内容 :</label>                    
+                    <!-- <nz-form-item>
+                        <nz-form-control nzErrorTip="Particular is required!"> -->
+                        <nz-input-group>
+                            <textarea rows="5" class="inputWidth" [(ngModel)]="Purchase.particular" class="inputWidth"></textarea>
+                        </nz-input-group>
+                        <!-- </nz-form-control>
+                    </nz-form-item>  -->
+                    <!-- <textarea rows="5" class="inputWidth" [(ngModel)]="particular" class="inputWidth"></textarea> -->
+                </div>
+            </div>
+        </div>
+</div>
+
+<ngx-loading [show]="isVisible" [config]="{ backdropBorderRadius: '3px'}" [template]="customLoadingTemplate">
+</ngx-loading>
+<nz-modal [(nzVisible)]="isModalVisible" nzTitle="Add Supplier" (nzOnCancel)="handleCancel()">
+                
+    <!-- <app-supplier-add (returnResult)="getValue($event)" ></app-supplier-add> -->
+    <div *nzModalFooter>
+      <span>Modal Footer:</span>      
+      <!-- <button nz-button nzType="default" (click)="save()">Update</button> -->
+      <button nz-button nzType="primary" (click)="handleCancel()" [nzLoading]="isConfirmLoading">Cancel</button>
+    </div>
+</nz-modal>

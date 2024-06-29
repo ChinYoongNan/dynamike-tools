@@ -1,0 +1,133 @@
+<div  class="tableShow-area"  style="height: fit-content">
+    <div class="tableShow-table">
+        <div class="butArea" style="border: 2px solid grey;  margin-top: 10px;">
+            <div  style="padding:5px" style="border-bottom: 2px solid grey;padding: 10px;">
+                <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+                    <h3 style="float:left;"><span>Price Type</span></h3>
+                    <div style="float:right">
+                        <nz-button-group nzSize="small" class="tableBut" >
+                            <button nzType="primary" nz-button 
+                                (click)="addItems(Items)">Add Item</button>
+                        </nz-button-group>
+                    </div>
+                </div>
+                <div  nz-row style="display: flex;width: 100%;">
+                    <div  style="width: 50%;">
+                        <label class="displayText">Price Type</label>
+                        <nz-select nzShowSearch class="inputWidth"
+                            [(ngModel)]="Items.priceType"
+                            (ngModelChange)="PriceTypeChange($event)"                    
+                            nzPlaceHolder="Select a Solution">
+                            <ng-container *ngFor="let p of PriceType">Items
+                                <nz-option  *ngIf="PriceType" [nzValue]="p.description" [nzLabel]="p.description"></nz-option>
+                            </ng-container>
+                            
+                            <nz-option *ngIf="!PriceType" nzDisabled nzCustomContent>
+                                <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                            </nz-option>
+                        </nz-select>
+                    </div>
+                    <div style="width:50%">
+                        <label class="displayText">Price / 卖价 :</label>
+                        <nz-form-item>
+                            <nz-form-control nzErrorTip="Item Unit Cost is required!">
+                            <nz-input-group  nzSuffix="MYR" nzPrefix="RM">
+                                <input nz-input  [(ngModel)]="Items.sellingPrice"  />
+                            </nz-input-group>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>                
+                <div *ngIf="wholesale">
+                    <div style="display: flex;width: 100%;margin-top: 10px;align-items: flex-end;">
+                        <div style="width:50%">
+                            <label class="displayText">Packaging Size /  箱数量 :</label>
+                            <!-- <nz-form-item>
+                                <nz-form-control nzErrorTip="Packaging Size is required!">
+                                  <nz-input-group> -->
+                                    <input nz-input class="inputWidth" [(ngModel)]="Items.packagingsize" (change)="setPackage($event)"/>
+                                  <!-- </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>   -->
+                        </div>  
+                    </div> 
+                </div>
+                <div *ngIf="wholesale" style="display: flex;width: 100%;margin-top: 10px;align-items: flex-end;">
+                    <div style="display: flex;width: 100%;margin-top: 10px;align-items: flex-end;">                         
+                        <div style="width:50%">
+                            <label class="displayText">Dimension (cm) /  箱大小 :</label>
+                            <!-- <nz-form-item>
+                                <nz-form-control nzErrorTip="Dimension is required!"> -->
+                                  <nz-input-group nzSuffix="cm">
+                                    <input nz-input class="inputWidth" [(ngModel)]="Items.dimension" />
+                                  </nz-input-group>
+                                <!-- </nz-form-control>
+                            </nz-form-item>   -->
+                        </div>                   
+                        <div style="width:50%">
+                            <label class="displayText">Net Weight /  箱重量 :</label>
+                            <!-- <nz-form-item>
+                                <nz-form-control nzErrorTip="Net Weight is required!"> -->
+                                  <nz-input-group nzSuffix="KG">
+                                    <input nz-input class="inputWidth" [(ngModel)]="Items.netweight" />
+                                  </nz-input-group>
+                                <!-- </nz-form-control>
+                            </nz-form-item>   -->
+                        </div>
+                    </div>
+                </div>                  
+            </div>
+            <div class="tableShow-area">
+                <!-- <app-vertical-list
+                (updatedData)="getUpdatedData($event)" 
+                (selectedIndex)="getSelectedIndex($event)" 
+                [notifier]="tableData" 
+                [tableSettings]="tableSettings"
+                [tableHeaderData]="headerData"
+                (nextPage)="nextPageSetting($event,this,nextPage)"
+                ></app-vertical-list> -->
+                <!-- <app-vertical-list
+                [notifier]="tableData" 
+                [tableSettings]="tableSettings"
+                [tableHeaderData]="headerData"
+                ></app-vertical-list> -->
+            </div>
+            <nz-table  [nzScroll]="{ x: '1150px' }"   [nzData]="ListItems" nzBordered nzSize="small"
+                nzHideOnSinglePage="true" [nzFrontPagination]="false" [nzNoResult]="emptyTemplate">
+                <ng-template #emptyTemplate>
+                    <tr>
+                        <nz-empty *ngIf="NoResultId=='No Data'" nzNotFoundImage="simple"></nz-empty>
+                        <nz-empty *ngIf="NoResultId=='No Result'" nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                            [nzNotFoundContent]="contentTpl">
+                            <ng-template #contentTpl>
+                                <span> {{NoResultId}} </span>
+                            </ng-template>
+                        </nz-empty>
+                    </tr>
+                </ng-template>
+                <thead>
+                    <tr>
+                        <ng-container *ngFor="let p of headerColumn">
+                            <th  class="firstTh" style="word-wrap: break-word;text-align: center;z-index: 20;position:sticky"
+                                [colspan]="1">
+                                {{p}}
+                            </th>
+                        </ng-container>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let i of ListItems">
+                        <tr >
+                            <td >{{i.priceType}}</td>
+                            <td>{{i.sellingPrice}}</td>
+                            <td >{{i.packagingsize}}</td>
+                            <td >{{i.netweight}}</td>
+                            <td>{{i.dimension}}</td>    
+                            <td></td>  
+                        </tr>   
+                    </ng-container>
+                </tbody>
+            </nz-table>
+        </div>
+    </div>
+</div>

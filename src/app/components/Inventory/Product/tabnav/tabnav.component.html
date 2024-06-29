@@ -1,0 +1,12 @@
+  <nz-tabset  [nzSelectedIndex]="Selected" (nzSelectedIndexChange)="change($event)" style="font-family: Metropolis;">
+  <nz-tab [nzTitle]="navList[0].name">
+    <app-productlisting [notifier]="tableData" ></app-productlisting>
+  </nz-tab>
+  <nz-tab *ngIf="productCategoryType==1" [nzTitle]="navList[1].name" >
+    <app-expired_listing [notifier]="tableData" (getPaginationData)="getPagination($event)" ></app-expired_listing>
+  </nz-tab>
+  <nz-tab *ngIf="productCategoryType==1 || productCategoryType==2" [nzTitle]="navList[2].name">
+    <app-goods_price_listing [notifier]="tableData" (getPaginationData)="getPagination($event)"></app-goods_price_listing>
+  </nz-tab>
+
+</nz-tabset>

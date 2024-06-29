@@ -1,0 +1,432 @@
+<div class="contain-inter" >
+    <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+        <button id="round" nzShape="circle" nz-button nzType="primary" (click)="init()"  ><i nz-icon nzType="reload"></i></button>
+        <h2 style="float:left;"><span>Sales Transaction 营业</span></h2>
+          <div style="display: inline;margin-left:250px">                    
+            <div style="width:100%;">
+                <nz-form-item>
+                <nz-form-label nzFor="orderId">Order No / 单号码</nz-form-label>
+                <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
+                    <input nz-input   type="text" nz-input placeholder="input search text" id="orderId" [(ngModel)]="orderId" (keyup.enter)="searchOrder()" />
+                </nz-input-group>
+                <ng-template #suffixButton>
+                    <button nzType="primary" nz-button
+                            (click)="searchOrder()">Search / 寻找记录</button>
+                </ng-template>
+                </nz-form-item>
+                <nz-form-item >
+                    <nz-form-label  nzFor="year_index" style="float:left">Year</nz-form-label>
+                    <nz-form-control [nzSpan]="6" nzErrorTip="Please select a product type!">
+                        <nz-select [(ngModel)]="year_index" (ngModelChange)="AccountYearChange($event)"
+                        nzPlaceHolder="Select a Year">
+                        <ng-container *ngFor="let p of AccountYears">
+                            <nz-option *ngIf="!YearLoadSel" [nzValue]="p" [nzLabel]="p"></nz-option>
+                            </ng-container>
+                            <nz-option *ngIf="YearLoadSel" nzDisabled nzCustomContent>
+                                <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                <!-- </nz-form-item>
+                <nz-form-item > -->
+                    <nz-form-label  nzFor="month_index" style="float:left">Month</nz-form-label>
+                    <nz-form-control [nzSpan]="6" nzErrorTip="Please select a Month!">
+                        <nz-select [(ngModel)]="month_index"
+                            nzPlaceHolder="Select a Month">
+                            <nz-option
+                                [nzValue]="null" [nzLabel]="All"></nz-option>
+                            <ng-container *ngFor="let p of month">
+                                <nz-option [nzValue]="p.id" [nzLabel]="p.value"></nz-option>
+                            </ng-container>
+                        </nz-select>
+                    </nz-form-control>
+                    <button nzType="primary" nz-button
+                                (click)="AccountMonthChange(month_index)">Detail / 记录</button>
+                    <button nzType="primary" nz-button
+                            (click)="searchByMonthChange()">Summary / 单日赚的记录</button>
+                </nz-form-item>
+                <nz-form-item >
+                    <nz-form-label  nzFor="provider_index" style="float:left">Provider</nz-form-label>
+                    <nz-form-control [nzSpan]="6" nzErrorTip="Please select a Provider type!">
+                      <nz-select
+                      #productTypeselect
+                        id="provider_index"
+                        [(ngModel)]="provider_index"
+                        nzPlaceHolder="Select a Provider Type"
+                        (ngModelChange)="ProviderChange($event)"
+                      >
+                        <nz-option
+                            [nzValue]="null" [nzLabel]="All"></nz-option>
+                        <ng-container *ngFor="let p of Providers">
+                            
+                            <nz-option *ngIf="!ProviderLoadSel" 
+                            [nzValue]="p.id" [nzLabel]="p.description"></nz-option>
+                        </ng-container>
+                        <nz-option *ngIf="ProviderLoadSel" nzDisabled nzCustomContent>
+                            <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                        </nz-option>
+                      </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label  nzFor="payments_date" style="float:left">Date</nz-form-label>
+                    <nz-form-control [nzSpan]="6" nzErrorTip="Please select a date!">
+                        <input nz-input  type="date" [(ngModel)]="payments_date" (change)="DateChange(payments_date)"/>
+                    </nz-form-control>
+                </nz-form-item>
+                </div>            
+            </div>
+            <div *ngIf="dailyReport" style="display: inline;margin-left:250px">                    
+                <nz-page-header >
+                    <nz-page-header-title>Summary of {{payments_date}} Report</nz-page-header-title>
+                    <nz-page-header-content>
+                        <nz-descriptions nzSize="small" [nzColumn]="4">                            
+                          <nz-descriptions-item nzTitle="Orders Count" [nzSpan]="1">{{totalElements}}</nz-descriptions-item>
+                          <nz-descriptions-item nzTitle="Total Payment Due (MYR)" [nzSpan]="1">{{totalPaymentperPage}}</nz-descriptions-item>
+                          <nz-descriptions-item nzTitle="Total COGS (MYR)" [nzSpan]="1">{{totalCOGSperPage}}</nz-descriptions-item>
+                          <nz-descriptions-item nzTitle="Total Earned (MYR)" [nzSpan]="1">{{totalEarnedperPage}}</nz-descriptions-item>
+                        </nz-descriptions>
+                      </nz-page-header-content>
+                </nz-page-header>
+            </div>
+    </div>
+    <div class="tableShow-area"  
+        >
+        <!-- <div class="">
+            <nz-alert nzBanner nzMessage="Unselect 'Hide Legacy Releases' to check more interoperability." nzCloseable></nz-alert>
+        </div> -->
+        <div class="tableShow-table">
+            <div class="butArea" style="width:100%">
+                <div [style.height]="'30px'" class="tableTop">
+                    <div class="thLeft" style="width:100%">
+                        <a class="columns" style="pointer-events: auto;"
+                             nz-dropdown
+                            nzTrigger="click" [nzDropdownMenu]="menu">
+                            <span>
+                                Listing
+                            </span>
+                        </a>
+                        <nz-dropdown-menu #menu="nzDropdownMenu">
+                            <div class="dropDownCls">
+                                <div class="Down-header">Show Columns</div>
+                                <nz-checkbox-wrapper style="width: 100%;" >
+                                </nz-checkbox-wrapper>
+                            </div>
+                        </nz-dropdown-menu>
+                    </div>
+                </div>
+                <nz-table  [nzScroll]="{ x: '1150px' }"   [nzData]="Payments" nzBordered nzSize="small"
+                    nzHideOnSinglePage="true" [nzFrontPagination]="false" [nzNoResult]="emptyTemplate">
+                    <ng-template #emptyTemplate>
+                        <tr>
+                            <nz-empty *ngIf="NoResultId=='No Data'" nzNotFoundImage="simple"></nz-empty>
+                            <nz-empty *ngIf="NoResultId=='No Result'" nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                                [nzNotFoundContent]="contentTpl">
+                                <ng-template #contentTpl>
+                                    <span> {{NoResultId}} </span>
+                                </ng-template>
+                            </nz-empty>
+                        </tr>
+                    </ng-template>
+                    <thead>                        
+                        <tr *ngIf="!dailyReport">                            
+                            <ng-container *ngFor="let p of header">
+                                <th  class="firstTh" style="text-align: center;z-index: 20;"
+                                    [colspan]="1">
+                                    {{p}}
+                                </th>
+                            </ng-container>
+                        </tr>
+                        <tr *ngIf="dailyReport">                            
+                            <ng-container *ngFor="let p of detailheader">
+                                <th  class="firstTh" style="text-align: center;z-index: 20;"
+                                    [colspan]="1">
+                                    {{p}}
+                                </th>
+                            </ng-container>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let p of Payments, let i = index">
+                            <tr *ngIf="!dailyReport">
+                                <!-- <td>
+                                    
+                                </td> -->
+                                <td>
+                                    {{p.date}}
+                                </td>   
+                                <td style="max-width:50px">
+                                    {{p.orderId}}
+                                </td>
+                                <td style="max-width:50px">
+                                    {{p.client.name}}
+                                </td>  
+                                <style>
+                                    .listingeditinput{
+                                        width:100px;
+                                        text-align: end;
+                                    }
+                                </style>                                 
+                                <td class="trDisplayLabel{{i}}">
+                                    {{p.paymentCredit}}
+                                </td>   
+                                <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input  class="listingeditinput" (change)="amountChange(i)" [(ngModel)]="p.paymentCredit" />
+                                </td>  
+                                <td class="trDisplayLabel{{i}}">
+                                    {{p.paymentFees}}
+                                </td>  
+                                <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input class="listingeditinput" (change)="amountChange(i)" [(ngModel)]="p.paymentFees" />
+                                </td> 
+                                <td class="trDisplayLabel{{i}}">
+                                    {{p.shippingFees}}
+                                </td>  
+                                <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input  class="listingeditinput" (change)="amountChange(i)" [(ngModel)]="p.shippingFees" />
+                                </td> 
+                                <td class="trDisplayLabel{{i}}">
+                                    {{p.othersFees}}
+                                </td>  
+                                <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input  class="listingeditinput" (change)="amountChange(i)" [(ngModel)]="p.othersFees" />
+                                </td> 
+                                <td class="trDisplayLabel{{i}}" style="max-width:80px">
+                                    {{p.paymentDue}}
+                                </td>  
+                                <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input  class="listingeditinput" (change)="amountChange(i)" [(ngModel)]="p.paymentDue" />
+                                </td>  
+                                
+                                <td class="trDisplayLabel{{i}}" style="max-width:80px">
+                                    {{p.adjusted}}
+                                </td>  
+                                <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input  class="listingeditinput" (change)="amountChange(i)" [(ngModel)]="p.adjusted" />
+                                </td> 
+                                   
+                                <td style="max-width:100px">
+                                    {{p.totalCOGS}}
+                                </td>
+                                   
+                                <td style="max-width:100px">
+                                    {{p.earned}}
+                                </td>
+                                <!-- <td>
+                                    <i *ngIf="p.freeShipping" nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"></i>
+                                    <i *ngIf="!p.freeShipping" nz-icon [nzType]="'close-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#eb2f96'"></i>
+                                </td>  -->
+                                <td class="trDisplayLabel{{i}}" style="max-width:50px">
+                                    {{p.status}}
+                                </td>  
+                                <td class="trEditLabel{{i}}" style="display:none;max-width:50px">
+                                    <input nz-input  class="listingeditinput" [(ngModel)]="p.status" />
+                                </td>   
+                                <td>
+                                    {{p.provider.description}}
+                                </td>  
+                                <td style="max-width:50px">
+                                    <button nz-button nzType="primary" (click)="deleteTransaction(i)"  ><i nz-icon nzType="delete"></i></button>
+                                    <button nz-button [nzType]="'primary'" (click)="showModal(i)"><span>Details</span></button>
+                                    <button nz-button [nzType]="'primary'" (click)="update(i)"><span>Update</span></button>
+                                </td>     
+                            </tr>    
+
+                            <tr *ngIf="dailyReport">
+                                <td>
+                                    {{p.date}}
+                                </td>
+                                <td>
+                                    {{p.orderCount}}
+                                </td>   
+                                <!-- <td style="max-width:50px">
+                                    {{p.orderId}}
+                                </td>
+                                <td *ngIf="!dailyReport" style="max-width:50px">
+                                    {{p.client.name}}
+                                </td>   -->
+                                <style>
+                                    .listingeditinput{
+                                        width:100px;
+                                        text-align: end;
+                                    }
+                                </style>                                 
+                                <td class="trDisplayLabel{{i}}">
+                                    {{p.paymentCredit}}
+                                </td>   
+                                <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input  class="listingeditinput" (change)="amountChange(i)" [(ngModel)]="p.paymentCredit" />
+                                </td>  
+                                <td class="trDisplayLabel{{i}}">
+                                    {{p.paymentFees}}
+                                </td>  
+                                <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input class="listingeditinput" (change)="amountChange(i)" [(ngModel)]="p.paymentFees" />
+                                </td> 
+                                <td class="trDisplayLabel{{i}}">
+                                    {{p.shippingFees}}
+                                </td>  
+                                <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input  class="listingeditinput" (change)="amountChange(i)" [(ngModel)]="p.shippingFees" />
+                                </td> 
+                                <td class="trDisplayLabel{{i}}">
+                                    {{p.othersFees}}
+                                </td>  
+                                <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input  class="listingeditinput" (change)="amountChange(i)" [(ngModel)]="p.othersFees" />
+                                </td> 
+                                <td class="trDisplayLabel{{i}}" style="max-width:80px">
+                                    {{p.paymentDue}}
+                                </td>  
+                                <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input  class="listingeditinput" (change)="amountChange(i)" [(ngModel)]="p.paymentDue" />
+                                </td>  
+                                
+                                <td class="trDisplayLabel{{i}}" style="max-width:80px">
+                                    {{p.adjusted}}
+                                </td>  
+                                <td class="trEditLabel{{i}}" style="display:none">
+                                    <input nz-input  class="listingeditinput" (change)="amountChange(i)" [(ngModel)]="p.adjusted" />
+                                </td> 
+                                   
+                                <td style="max-width:100px">
+                                    {{p.totalCOGS}}
+                                </td>
+                                   
+                                <td style="max-width:100px">
+                                    {{p.earned}}
+                                </td>
+                                <!-- <td>
+                                    <i *ngIf="p.freeShipping" nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"></i>
+                                    <i *ngIf="!p.freeShipping" nz-icon [nzType]="'close-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#eb2f96'"></i>
+                                </td>  -->
+                                <!-- <td class="trDisplayLabel{{i}}" style="max-width:50px">
+                                    {{p.status}}
+                                </td>  
+                                <td class="trEditLabel{{i}}" style="display:none;max-width:50px">
+                                    <input nz-input  class="listingeditinput" [(ngModel)]="p.status" />
+                                </td>   
+                                <td>
+                                    {{p.provider.description}}
+                                </td>   -->
+                                <!-- <td style="max-width:50px">
+                                    <button nz-button nzType="primary" (click)="deleteTransaction(i)"  ><i nz-icon nzType="delete"></i></button>
+                                    <button nz-button [nzType]="'primary'" (click)="showModal(i)"><span>Details</span></button>
+                                    <button nz-button [nzType]="'primary'" (click)="update(i)"><span>Update</span></button>
+                                </td>      -->
+                            </tr>  
+                        </ng-container>
+                    </tbody>                    
+                    <tfoot  *ngIf="!footer">
+                        <tr >
+                            <td colspan="11" >
+                                <nz-pagination style="text-align: center;" (nzPageIndexChange)="nextProductPage($event)"  [nzPageIndex]="currentPage" [nzTotal]="totalElements" [nzPageSize]="pageSize" nzSimple></nz-pagination>
+                            </td>
+                            <td style="text-align: center;">                                
+                                Total Due : {{totalPaymentperPage}}
+                            </td>                            
+                            <td style="text-align: center;">                                
+                                Total COGS : {{totalCOGSperPage}}
+                            </td>
+                            
+                            <td style="text-align: center;">                                
+                                Total Earned : {{totalEarnedperPage}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="14" style="text-align: center;">                                
+                                Total Record : {{totalElements}}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+</div>
+<nz-modal [(nzVisible)]="isModalVisible" nzTitle="Order Item" (nzOnCancel)="handleCancel()">
+    <div *nzModalContent>
+    </div>
+    <div style="padding:5px" style="border-bottom: 2px solid grey;padding: 10px;">
+        <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+            <h3 style="float:left;"><span>Product List / 货单</span></h3>
+            <div style="float:right">
+                <nz-button-group nzSize="small" class="tableBut" >
+                    <button nzType="primary"  nz-button 
+                    (click)="addItems(item_code,item_quantity,invoiceId,item_unit_cost,item_sellingPrice)">Add Item</button>
+                </nz-button-group>
+            </div>
+        </div>
+        <div nz-row style="display: flex;width: 100%;">
+            <div style="width: 50%;">
+                <label class="displayText">Product Code / 货名 :</label>
+                <input nz-input  [(ngModel)]="item_code" />
+
+                <nz-select nzShowSearch class="inputWidth"
+                    [(ngModel)]="item_index"
+                    (ngModelChange)="ItemChange($event)"                    
+                    nzPlaceHolder="Select a Solution">
+                    <!-- [(ngModel)]="item_index"  -->
+                    <ng-container *ngFor="let p of Items; let i = index">Items
+                        <nz-option  *ngIf="!ProductLoadSel" [nzValue]="i" [nzLabel]="p.code + '-' + p.name"></nz-option>
+                    </ng-container>
+                    
+                    <nz-option *ngIf="ProductLoadSel" nzDisabled nzCustomContent>
+                        <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                    </nz-option>
+                </nz-select>
+            </div>
+            <!-- <div style="width:50%">
+                <label class="displayText">Product Name / 货名 :</label>
+                <label>{{item_name}}</label>
+            </div> -->
+            <div style="width:50%">
+                <label class="displayText">Quantity / 数量 ：</label>
+                <input nz-input  class="inputWidth" [(ngModel)]="item_quantity" />
+            </div>
+            <div style="width:50%">
+                <label class="displayText">Selling Price / 卖价 ：</label>
+                <input nz-input  class="inputWidth" [(ngModel)]="item_sellingPrice" />
+            </div>
+            <div >
+                
+            </div>
+        </div>
+    </div>
+    <nz-table  [nzScroll]="{ x: '1150px' }" [nzData]="OrderItems" nzBordered nzSize="small"
+                    nzHideOnSinglePage="true" [nzFrontPagination]="false" [nzNoResult]="emptyTemplate">
+    <thead>
+        <tr>            
+            <th>Item Id</th>
+            <th>Quantity</th>
+            <th>Unit Cost</th>
+            <th>Total Cost</th>
+            <th>Selling Price</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+        
+        <tbody>
+            <tr *ngFor="let p of OrderItems, let i = index">
+                <td>{{p.itemId}}</td>
+                <td>{{p.quantity}}</td>
+                <td>{{p.unitPrice}}</td>
+                <td>{{p.totalPrice}}</td>
+                <td>{{p.sellingPrice}}</td>
+                <td>
+                    <button nzType="primary" nz-button 
+                    (click)="deleteItem(i)">Delete</button>
+                </td>
+            </tr>
+            
+        </tbody>
+        <tr></tr>
+    </nz-table>
+    <div *nzModalFooter>
+      <span>Modal Footer:</span>
+      <button nz-button nzType="default" (click)="updateTransactionItem()">Update</button>
+      <button nz-button nzType="primary" (click)="handleCancel()" [nzLoading]="isConfirmLoading">Cancel</button>
+    </div>
+  </nz-modal>
+<ngx-loading [show]="isVisible" [config]="{ backdropBorderRadius: '3px'}" [template]="customLoadingTemplate">
+</ngx-loading>

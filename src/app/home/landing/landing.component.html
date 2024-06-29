@@ -1,0 +1,83 @@
+<div style="background: #df6317; color: white; text-align: center;">
+    <span style="font-size: 12px;">Point</span><br/>  
+    <span style="font-size: 20px;font-weight: bold;">0</span>    
+</div>
+<div class="headerInfo">
+  <div class="menuRow">
+    <div class="menuDiv">         
+      <span nz-icon nzType="qrcode" nzTheme="outline"  (click)="click('/ClockIn')"
+      class="menuIcon"></span>
+      <span class="menuLabel">Virtual Card</span>
+    </div>
+  </div>
+</div>
+<div>
+  <img nz-image  width="100%"  height="100px" src="https://drive.google.com/thumbnail?id=1YN2wWgyWj0t0-rCBvNXZgkVaiGF1jp2M" alt="" referrerpolicy="no-referrer"/>
+  
+  <div class="menuRow" style="border: 0; overflow:auto">
+    <ng-container *ngFor="let p of mainTools[0], ,let i = index">
+        <div class="menuDiv" *ngIf="accountService.isAuthorized(p.role) && !p.children; else childrentemplate" >         
+          <span nz-icon nzType="{{p.icon}}" nzTheme="outline" (click)="click(p.link)"
+          class="menuIcon"></span>
+          <span class="menuLabel"> {{p.name}}</span>
+        </div>
+    </ng-container>
+  </div>  
+  <div class="menuRow" style="border: 0; overflow:auto">
+    <ng-container *ngFor="let p of mainTools[1], ,let i = index">
+        <div class="menuDiv" *ngIf="accountService.isAuthorized(p.role) && !p.children; else childrentemplate" >         
+          <span nz-icon nzType="{{p.icon}}" nzTheme="outline" (click)="click(p.link)"
+          class="menuIcon"></span>
+          <span class="menuLabel"> {{p.name}}</span>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="accountService.isAuthorized('Admin')"></ng-container>
+  </div>  
+</div>
+<div class="contain-inter" style="padding:1rem">   
+  <ng-container *ngIf="accountService.isAuthorized('Admin')">
+    <app-product_search_engine mode="SearchProduct"></app-product_search_engine>
+  </ng-container>
+  <!-- <nz-drawer
+    [nzVisible]="visible"
+    nzPlacement="right"
+    [nzTitle]="title"
+    nzWidth="100%"
+    (nzOnClose)="close()"
+  >
+    <br/>
+    <ng-container>
+      <nz-collapse nzAccordion>          
+        <nz-collapse-panel [nzHeader]="'Virtiual Card'" [nzActive]="true">
+          <app-virtual-card></app-virtual-card>
+        </nz-collapse-panel>          
+        <nz-collapse-panel [nzHeader]="'PaySlip'" [nzActive]="true">
+          <app-profile></app-profile>
+        </nz-collapse-panel>
+      </nz-collapse>
+    </ng-container>
+  </nz-drawer> -->
+  <div style="display:flex;background: #ECECEC;padding:5px">
+    <div>
+      <!-- <app-voucher 
+      [notifier]="voucherData" 
+      [tableHeaderData]="voucherHeaderData"></app-voucher> -->
+    </div> 
+  </div>
+  <div style="display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 385px;background: #ECECEC;padding:5px">
+    <app-carousel 
+    [notifier]="tableData" 
+    [tableHeaderData]="headerData"
+    ></app-carousel>
+  </div>
+  <img nz-image width="100%" max-width="385px" height="100px" src="https://drive.google.com/thumbnail?id=1xyCjsDZlWfyrOB3T8hQmU78TvVVlbswW" alt="" referrerpolicy="no-referrer"/>
+  <div style="background: #ECECEC;padding:5px">
+    <app-group-card 
+    [notifier]="productTypeData" 
+    [tableHeaderData]="headerData"
+    ></app-group-card>
+  </div>
+</div>

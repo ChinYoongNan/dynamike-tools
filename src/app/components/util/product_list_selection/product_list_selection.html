@@ -1,0 +1,132 @@
+<div id="productListSelection" class="tableShow-area"  style="height: fit-content">
+    <div class="tableShow-table">
+        <div class="butArea" style="border: 2px solid grey;  margin-top: 10px;">
+            <div  style="padding:5px" style="border-bottom: 2px solid grey;padding: 10px;">
+                <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+                    <h3 style="float:left;"><span>Product List / 货单</span></h3>
+                    <div style="float:right">
+                        <nz-button-group nzSize="small" class="tableBut" >
+                            <button nzType="primary" nz-button 
+                                (click)="addItems(item_code,item_quantity,item_unit_cost,item_expired,item_name, total_amount)">Add Item</button>
+                        </nz-button-group>
+                    </div>
+                </div>
+                <app-product_search_engine mode="Product" (searchResult)="getSearchValue($event)"></app-product_search_engine>
+                <!-- <app-product_search_engine mode="Product" *ngIf="!productCategory||productCategory==1||productCategory==6"  (searchResult)="getSearchValue($event)"></app-product_search_engine>
+
+                <div *ngIf="productCategory&&productCategory!=1&&productCategory!=6" style="width: 100%;">
+                    <label class="displayText">Product Code</label>
+                    <input nz-input  [(ngModel)]="item_code" (ngModelChange)="InputChange($event)"  />  
+                    <nz-select nzShowSearch class="inputWidth"
+                        [(ngModel)]="item_index"
+                        (ngModelChange)="ItemChange($event)"                    
+                        nzPlaceHolder="Select a Solution">
+                        <ng-container *ngFor="let p of Items; let i = index">Items
+                            <nz-option  *ngIf="Items" [nzValue]="i" [nzLabel]="p.code + '-' + p.name"></nz-option>
+                        </ng-container>
+                        
+                        <nz-option *ngIf="!Items" nzDisabled nzCustomContent>
+                            <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                        </nz-option>
+                    </nz-select>
+                </div> -->
+
+                <div  *ngIf="!productCategory||productCategory==1||productCategory==6" nz-row style="display: flex;width: 100%;">
+                    <div style="width:35%">
+                        <label >Product Code / 代号</label>
+                        <nz-input-group >
+                            <input nz-input [(ngModel)]="item_code + ' - ' + item_name" nz-input readOnly />
+                          </nz-input-group>
+                    </div>
+                </div>                
+                <div [formGroup]="productForm">
+                    <div style="display: flex;width: 100%;margin-top: 10px;align-items: flex-end;">
+                        <div style="width:50%">
+                            <label class="displayText">Unit Cost / 单价 :</label>
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Item Unit Cost is required!">
+                                <nz-input-group  nzSuffix="MYR" nzPrefix="RM">
+                                    <input nz-input formControlName="item_unit_cost" [(ngModel)]="item_unit_cost"  />
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <!-- <div>RM<input nz-input [(ngModel)]="item_unit_cost" /></div> -->
+                        </div>
+                        <div style="width:50%;">
+                            <label class="displayText">Quantity / 数量 ：</label>
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Item Quantity is required!">
+                                <nz-input-group>
+                                    <input nz-input formControlName="item_quantity" [(ngModel)]="item_quantity"  />
+                                </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                    </div> 
+                </div>
+                <div style="display: flex;width: 100%;margin-top: 10px;align-items: flex-end;">
+                    <div style="width:50%;">                        
+                        <label class="displayText">Expired Date / 过期日期 :</label>
+                        <input nz-input  type="date" [(ngModel)]="item_expired" />
+                    </div>
+                </div>                  
+            </div>
+            
+            <nz-table  [nzScroll]="{ x: '1150px' }"   [nzData]="ProductList" nzBordered nzSize="small"
+                nzHideOnSinglePage="true" [nzFrontPagination]="false" [nzNoResult]="emptyTemplate">
+            <!-- <nz-table   [nzData]="ProductList"  nzBordered nzSize="small"
+                nzHideOnSinglePage="true" [nzFrontPagination]="false" [nzNoResult]="emptyTemplate"> -->
+                <ng-template #emptyTemplate>
+                    <tr>
+                        <nz-empty *ngIf="NoResultId=='No Data'" nzNotFoundImage="simple"></nz-empty>
+                        <nz-empty *ngIf="NoResultId=='No Result'" nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                            [nzNotFoundContent]="contentTpl">
+                            <ng-template #contentTpl>
+                                <span> {{NoResultId}} </span>
+                            </ng-template>
+                        </nz-empty>
+                    </tr>
+                </ng-template>
+                <thead>
+                    <tr>
+                        <ng-container *ngFor="let p of headerColumn">
+                            <th  class="firstTh" style="word-wrap: break-word;text-align: center;z-index: 20;position:sticky"
+                                [colspan]="1">
+                                {{p}}
+                            </th>
+                        </ng-container>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let p of ProductList,let i = index">
+                        <tr >                                
+                            <td>
+                                {{i+1}}
+                            </td>
+                            <td *ngIf="p.name">
+                                {{p.productCode + '-' + p.name}} 
+                            </td>  
+                            <td *ngIf="!p.name">
+                                {{p.productCode + '-' + p.productName}}
+                            </td>  
+                            <td>
+                                {{p.quantity}}
+                            </td> 
+                            <td>
+                                {{p.unitCost}}
+                            </td> 
+                            <td>
+                                {{p.expired}}
+                            </td>  
+                            <td>
+                                <button nzType="primary" nz-button 
+                                (click)="deleteItem(i)">Delete</button>                                    
+                            </td>
+                            
+                        </tr>    
+                    </ng-container>
+                </tbody>
+            </nz-table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="contain-inter" >
+    <app-page-header [HeaderItems]="pageHeader" (initPage)="init()"></app-page-header>
+    
+    <div  class="tableShow-area"  style="height: fit-content">
+        <!-- <div class="">
+            <nz-alert nzBanner nzMessage="Unselect 'Hide Legacy Releases' to check more interoperability." nzCloseable></nz-alert>
+        </div> -->
+        <app-table (updatedData)="getUpdatedData($event)" (selectedIndex)="getSelectedIndex($event)" [notifier]="tableData" [tableSettings]="tableSettings" [tableHeaderData]="headerData" ></app-table>
+    </div>
+    <button id="deleteButton" (click)="deleteDetail()" ></button>
+    <button id="updateButton"  (click)="updateDetail()"></button>    
+</div>
+<ngx-loading [show]="isVisible" [config]="{ backdropBorderRadius: '3px'}" [template]="customLoadingTemplate">
+</ngx-loading>

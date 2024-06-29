@@ -1,0 +1,341 @@
+<div class="contain-inter" style="height: fit-content;" >
+    
+    <nz-modal [nzAutofocus]="'auto'" nzWidth="fit-content" [nzBodyStyle]="{ height: 'fit-content' }" [(nzVisible)]="isOptionGroupMenuVisible" nzTitle="Option Group Menu" (nzOnCancel)="handleCancel()"
+        (nzAfterOpen)="foodMenuLoaded()">
+        <div style="width: 100%">
+            <app-option-group-menu (returnResult)="getOptionGroupMenu($event)" mode="order" [(productVariation)]="optionGroups" [priceType]="getPriceType()"></app-option-group-menu>
+        </div>
+        <div *nzModalFooter>
+            <button nz-button nzType="primary" (click)="addOptionGroup()">Add to Items</button>
+        </div>
+    </nz-modal>
+    <nz-modal [nzAutofocus]="'auto'" nzWidth="fit-content" [nzBodyStyle]="{ height: 'fit-content',  width: 'fit-content' }" [(nzVisible)]="isFoodMenuVisible" nzTitle="Food Menu" (nzOnCancel)="handleCancel()"
+        (nzAfterOpen)="foodMenuLoaded()">
+        <div style="width: 100%">
+            <app-food-menu (returnResult)="getFoodMenuSearchValue($event)" mode="order" [priceType]="getPriceType()"></app-food-menu>
+        </div>
+        <!-- <div *nzModalFooter>
+            <button nz-button nzType="primary" (click)="saveSales(false)">Save</button>
+        </div> -->
+    </nz-modal>
+    <app-cashier-dialog (returnResult)="getSalesDetail($event)" [isModalVisible]="isModalVisible" [dialogData]="selectedSales"></app-cashier-dialog>
+    
+    <style>        
+        .TBfontDesc {
+            font-size: 8px
+        }
+        .TBfont {
+            font-size: 20px
+        }
+
+        .TBcenter {
+            text-align: center;
+        }
+
+        .TBright {
+            text-align: right;
+        }
+    </style>
+    <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+        <button id="round" nzShape="circle" nz-button nzType="primary" (click)="reset();init()">
+            <i nz-icon nzType="reload"></i></button>   
+        <button nz-button nzType="primary" (click)="swap()">
+            <span nz-icon nzType="swap" nzTheme="outline"></span></button>             
+        <h1 style="float:left;"><span>Restaurant POS</span></h1>
+        <div style="float:right;">
+            <div nz-row style="display: flex;width: 100%;margin-top: 10px;">
+                <label class="displayText">Date / 日期 :</label>
+                <label style="font-size :18px;">{{date}}</label>
+            </div>
+            <div style="float:right;">
+                <button id="receipt" nzType="primary" nz-button (click)="printReceipt()" *ngIf="previousSales">Print Last Receipt</button>
+            </div> 
+        </div> 
+    </div>   
+    <style>
+        nz-divider {
+            color: #333;
+            font-weight: normal;
+        }
+        .inner-box {
+            background-color: grey;
+            padding: 16px 0;
+            text-align: center;
+        }
+        .res-table {
+            background-color: whitesmoke;
+            border: 1px solid black;
+            padding: 16px 0;
+            text-align: center;
+        } 
+    </style>
+    <div class="tableShow-area"  style="height: fit-content;">  
+        <div nz-row>
+            <div nz-col *ngIf="mainDashboard" nzFlex="4" style="padding:10px;background-color:whitesmoke">
+                <div nz-row [nzGutter]="[16, 16]" (click)="selectTable($event)">
+                    <div nz-col class="gutter-row" [nzSpan]="16"><div class="inner-box">Kitchen</div></div>
+                    <div nz-col class="gutter-row" [nzSpan]="8"><div class="inner-box">Toilet</div></div>
+
+                    <div nz-col class="gutter-row" [nzSpan]="16"><div class="inner-box">Bar Counter</div></div>
+                    <div nz-col class="gutter-row" [nzSpan]="8"><div class="inner-box">Counter</div></div>
+                    
+                    <!-- <div nz-col class="gutter-row" [nzSpan]="8"><div class="res-table">Take Away</div></div>
+                    <div nz-col class="gutter-row" [nzSpan]="10"></div> -->
+                    <!-- <div nz-col class="gutter-row" [nzSpan]="18"></div>
+                    <div nz-col class="gutter-row" [nzSpan]="6"><div class="res-table">S5</div></div>
+                    
+                    <div nz-col class="gutter-row" [nzSpan]="18"></div>
+                    <div nz-col class="gutter-row" [nzSpan]="6"><div class="res-table">S4</div></div> -->
+
+                    <div nz-col class="gutter-row" [nzSpan]="8"><div class="res-table">5</div></div>
+                    <div nz-col class="gutter-row" [nzSpan]="8"><div class="res-table">1</div></div>
+                    <div nz-col class="gutter-row" [nzSpan]="2"></div>
+                    <div nz-col class="gutter-row" [nzSpan]="6"><div class="res-table">TAKE AWAY</div></div>
+
+                    <div nz-col class="gutter-row" [nzSpan]="8"><div class="res-table">6</div></div>
+                    <div nz-col class="gutter-row" [nzSpan]="8"><div class="res-table">2</div></div>
+                    <div nz-col class="gutter-row" [nzSpan]="2"></div>
+                    <div nz-col class="gutter-row" [nzSpan]="6"><div class="res-table">Grab</div></div>
+                    <!-- <div nz-col class="gutter-row" [nzSpan]="2"></div>
+                    <div nz-col class="gutter-row" [nzSpan]="6"><div class="res-table">S2</div></div> -->
+                    
+                    <div nz-col class="gutter-row" [nzSpan]="8"><div class="res-table">7</div></div>
+                    <div nz-col class="gutter-row" [nzSpan]="8"><div class="res-table">3</div></div>
+                    <div nz-col class="gutter-row" [nzSpan]="2"></div>
+                    <div nz-col class="gutter-row" [nzSpan]="6"><div class="res-table">Phone</div></div>
+
+                    <div nz-col class="gutter-row" [nzSpan]="8"><div class="res-table">8</div></div>
+                    <div nz-col class="gutter-row" [nzSpan]="8"><div class="res-table">4</div></div>
+                    <div nz-col class="gutter-row" [nzSpan]="2"></div>
+                    <div nz-col class="gutter-row" [nzSpan]="6"><div class="res-table">FoodPanda</div></div>
+                    
+                    <div nz-col class="gutter-row" [nzSpan]="24"><div class="inner-box">Door</div></div>
+                </div>
+            </div>
+            <div *ngIf="!mainDashboard" nz-col nzFlex="4" style="padding:10px;background-color:whitesmoke;overflow-y: scroll;height:fit-content">
+                <div nz-col  style="padding:10px;background-color:whitesmoke">
+                    <div nz-row [nzGutter]="[24, 24]" (click)="loadPOSOrder($event)">                                                       
+                        <ng-container *ngFor="let p of orders" >
+                            <div *ngIf="
+                            p.tableNo != '1' &&
+                            p.tableNo != '2' &&
+                            p.tableNo != '3' &&
+                            p.tableNo != '4' &&
+                            p.tableNo != '5' &&
+                            p.tableNo != '6' &&
+                            p.tableNo != '7' &&
+                            p.tableNo != '8' &&
+                            p.kitchenOrder > 0" nz-col class="gutter-row" [nzSpan]="12" style="padding:10px;background-color:whitesmoke">
+                                <div>
+                                    <div class="res-table" style="background-color: orangered">{{p.tableNo}}</div>
+                                    <div style="background-color: orangered;text-align: center;"><span style="color:white;text-align: center;"> Total: {{p.orderItemList.length}} items</span></div>
+                                    <!-- <span class="TBfont">{{p.tableNo}}</span> -->
+                                    <ng-container *ngFor="let o of p.orderItemList" >
+                                        <!-- <div *ngIf="o.status !=='done'" class="res-table" (click)="handledItem(o.id,p.orderItemList,o)"><span class="TBfont">{{o.itemId}}</span> - {{o.name}}<span class="TBfont" style="display:none"> - {{o.quantity}}</span> <span class="TBfont" style="color:orangered" *ngIf="o.remark"> {{o.remark}}</span></div> -->
+                                        <div style="    background-color: whitesmoke;
+                                        border: 1px solid black;
+                                        padding: 16px 0;
+                                        text-align: center;"><span class="TBfont">{{o.itemId}}</span> - {{o.name}}<span class="TBfont" style="display:none"> - {{o.quantity}}</span> <span class="TBfont" style="color:orangered" *ngIf="o.remark"> {{o.remark}}</span></div>
+                                    </ng-container> 
+                                </div>
+                            </div>
+                        </ng-container> 
+                    </div>
+                </div>
+            </div>
+            <div nz-col nzFlex="3" class="butArea"
+                style="min-width:40%;border: 2px solid grey;  margin-top: 10px;height:fit-content">
+                    <div style="text-align:center;border-bottom: 1px solid whitesmoke;">
+                        <div style="width:100%;">
+                            <div style="width: 50%;float:left">
+                                <h2><span>Table : {{tableNo}}</span></h2>                                 
+                            </div> 
+                            <div style="width: 50%;float:right">
+                                <h2>                                    
+                                    <span *ngIf="paymentTotal">Total : RM {{paymentTotal}}</span>
+                                    <span *ngIf="!paymentTotal">Total : RM 0.00</span>
+                                    <button nzType="primary" *ngIf="setOfCheckedId.size>0" nz-button (click)="splitPay()">Split Pay</button>
+                                </h2>
+                                <!-- <button nz-button id="kickOpen" nzType="primary" onclick="kickOpen=false;writeonSer('1')" *ngIf="kickOpen">Kick Open</button>
+                                <button nz-button id="kickOpenDrawer" nzType="primary" onclick="writeonSer('1')" style="display:none">Open Drawer</button> -->
+                            </div>
+                        </div>
+                        <div style="width:100%;" *ngIf="tableNo==='Phone'">
+                            <label class="displayText">Phone No :</label>
+                            <nz-input-group >
+                                <input nz-input id="phoneNo" [(ngModel)]="phoneNo"/>
+                            </nz-input-group>
+                        </div> 
+                        <div style="width:100%;" *ngIf="tableNo==='Grab' || tableNo == 'FoodPanda'">
+                            <label class="displayText">{{tableNo}} Order No :</label>
+                            <nz-input-group >
+                                <input nz-input id="grabOrderNo" [(ngModel)]="grabOrderNo"/>
+                                <label nz-checkbox [(ngModel)]="NoSpoon">No Spoon</label>
+                            </nz-input-group>
+                        </div> 
+                    </div>
+                    <div *ngIf="tableNo" style="padding: 10px;">
+                        <div nz-row style="display: flex;width: 100%;">
+                            <div style="width: 100%;">
+                                <div>
+                                    <div nz-row style="float:right">
+                                        <nz-button-group nzSize="small" class="tableBut">
+                                            <button nzType="primary" id="addItembtn" nz-button
+                                                (click)="addItems(item_code,item_quantity,item_unit_cost,item_sellingPrice)">Add Item</button>
+                                            <button nzType="primary" nz-button *ngIf="OrderItems.length > 0"
+                                                (click)="saveOrder(false)">Send to Kitchen</button>
+                                        </nz-button-group>
+                                    </div> 
+                                </div>
+                                <div >
+                                    <!-- style="display: flex;" -->
+                                    <div nz-row style="display: flex;width: 100%;margin-top: 10px;">
+                                        <div style="width:100%;">
+                                            <label >Code / 代名 :</label>
+                                            <nz-input-group [nzAddOnAfter]="suffixButton">
+                                                <input nz-input id="itemcode" [(ngModel)]="item_code"
+                                                    (keydown.control.enter)="InputChange($event)"
+                                                    (keyup.enter)="InputChange($event)" />
+                                            </nz-input-group>
+                                            <ng-template #suffixButton>
+                                                <button nzType="primary" nz-button
+                                                        (click)="loadFoodMenuModal()">
+                                                    <i nz-icon nzType="appstore"></i>  
+                                                </button>
+                                            </ng-template>
+                                        </div>                                                                               
+                                        <div style="width:100%">
+                                            <label style="width:80%">{{item_name}}</label>
+                                            <label> RM {{item_unit_cost}}</label>
+                                            <!-- <nz-input-group nzPrefix="RM">
+                                                <input nz-input type="number" id="itemPrice" (change)="calTotal($event)" (keyup.enter)="addItems(item_code,item_quantity,item_unit_cost,item_sellingPrice)"  
+                                                [(ngModel)]="item_unit_cost" readonly/>
+                                            </nz-input-group> -->
+                                        </div>
+                                        <!-- <nz-select id="productItems" nzShowSearch class="inputWidth" [(ngModel)]="item_index"
+                                            (ngModelChange)="ItemChange($event)" nzPlaceHolder="Select a Solution">
+                                            <ng-container *ngFor="let p of Products; let i = index">Items
+                                                <nz-option *ngIf="!ProductLoadSel" [nzValue]="i" [nzLabel]="p.code + '-' + p.name">
+                                                </nz-option>
+                                            </ng-container>
+                                        </nz-select> -->
+                                    </div>                                   
+                                </div>
+                                <div>
+                                    <div nz-row style="display: flex;width: 98%;margin-top: 10px;">
+                                        <!-- <div style="width:50%">
+                                            <label class="displayText">Unit Price / 卖价 ：</label>
+                                            <nz-input-group nzPrefix="RM">
+                                                <input nz-input type="number" id="itemPrice" (change)="calTotal($event)" (keyup.enter)="addItems(item_code,item_quantity,item_unit_cost,item_sellingPrice)"  
+                                                [(ngModel)]="item_unit_cost" readonly/>
+                                            </nz-input-group>
+                                        </div>-->
+                                        <div style="width:30%">
+                                            <label >QTY :</label>
+                                            <nz-input-group>
+                                                <input nz-input type="number" id="itemquantity" (change)="calTotal($event)" (keyup.enter)="addItems(item_code,item_quantity,item_unit_cost,item_sellingPrice)"  
+                                                [(ngModel)]="item_quantity"/>
+                                            </nz-input-group>
+                                        </div>
+                                        <div style="width:70%">
+                                            <label class="displayText">Remark ：</label>                                            
+                                            <nz-input-group  *ngIf="optionGroups&& optionGroups.length===0 else elseOptionGroup">
+                                                <input nz-input id="itemremark" class="inputWidth"
+                                                    (change)="calTotal($event)" [(ngModel)]="item_remark" (keyup.enter)="addItemListEvent()" />
+                                            </nz-input-group>
+                                            <ng-template #elseOptionGroup>
+                                                <nz-input-group [nzAddOnAfter]="suffixRemarkButton">
+                                                    <input nz-input id="itemremark" class="inputWidth"
+                                                        (change)="calTotal($event)" [(ngModel)]="item_remark" (keyup.enter)="addItemListEvent()" />
+                                                </nz-input-group>
+                                            </ng-template>
+                                            <ng-template #suffixRemarkButton>
+                                                <button nzType="primary" nz-button
+                                                        (click)="loadOptionModal()">
+                                                    <i nz-icon nzType="appstore"></i>  
+                                                </button>
+                                            </ng-template>
+                                        </div>
+                                        <!-- <div style="width:50%">
+                                            <label class="displayText">Quantity / 数量 ：</label>
+                                            <input nz-input type="number" id="itemquantity" class="inputWidth"
+                                                (change)="calTotal($event)" [(ngModel)]="item_quantity" (keyup.enter)="addItemListEvent()" />
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <nz-table [nzScroll]="{ y: '500px' }" [nzData]="order_product" nzBordered nzSize="small" 
+                    nzHideOnSinglePage="true" [nzFrontPagination]="false" [nzNoResult]="emptyTemplate">
+                    <!-- style="min-height: 60vh"> -->
+                    <ng-template #emptyTemplate>
+                        <tr style="height:fit-content">
+                            <nz-empty *ngIf="NoResultId=='No Data'" nzNotFoundImage="simple"></nz-empty>
+                            <nz-empty *ngIf="NoResultId=='No Result'"
+                                nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                                [nzNotFoundContent]="contentTpl">
+                                <ng-template #contentTpl>
+                                    <span> {{NoResultId}} </span>
+                                </ng-template>
+                            </nz-empty>
+                        </tr>
+                    </ng-template>
+                    <thead>
+                        <tr style="text-align: center;font-size:15px">
+                            <td colspan="5">
+                                Item Count : {{itemCount}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th [nzShowCheckbox]="true" (nzCheckedChange)="onAllChecked($event)"></th>
+                            <ng-container *ngFor="let p of order_product, let i=index">
+                                <th style="text-align: center;z-index: 20;" [colspan]="1">
+                                    {{p}}
+                                </th>
+                            </ng-container>                              
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let p of order_items.orderItemList,let i = index">
+                            <tr>
+                                <td class="TBcenter"
+                                    [nzChecked]="setOfCheckedId.has(p.id)"
+                                    [nzDisabled]="p.status == 'paid'"
+                                    (nzCheckedChange)="onItemChecked(p.id, $event)"
+                                ></td>
+                                <td class="TBfontDesc" *ngIf="!p.name">
+                                    <span class="TBfont">{{p.itemId}}</span> - {{p.itemName}}
+                                </td>
+                                <td class="TBfontDesc" *ngIf="p.name">
+                                    <span class="TBfont">{{p.itemId}}</span> - {{p.name}}
+                                </td>
+                                <!-- <td class="TBright">
+                                    {{p.unitPrice}}
+                                </td> -->
+                                <!-- <td class="TBcenter">
+                                    {{p.quantity}}
+                                </td> -->
+                                <td class="TBfont TBright">
+                                    {{p.sellingPrice}}
+                                </td>
+                                <td class="TBfont TBright">
+                                    {{p.remark}}
+                                </td>
+                                <td class="TBcenter">
+                                    <button nzType="primary" nz-button *ngIf="!p.loaded && p.id"
+                                        (click)="cancelItem(p.id,i, p.quantity)">Cancel</button>
+                                    <button nzType="primary" nz-button *ngIf="p.loaded"
+                                        (click)="deleteItem(i, p.quantity)">Delete</button>
+                                </td>
+                            </tr>
+                        </ng-container>
+
+                    </tbody>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+</div>
+<ngx-loading [show]="isVisible" [config]="{ backdropBorderRadius: '3px'}" [template]="customLoadingTemplate">
+</ngx-loading>

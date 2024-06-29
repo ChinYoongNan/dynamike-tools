@@ -1,0 +1,44 @@
+<div class="contain-inter">
+    <app-page-header [HeaderItems]="pageHeader"></app-page-header>
+    <button id="saveButton" style="display:none"(click)="save(optionGroup);">Save button</button>
+    <!-- <app-page-detail [pageDetail]="pageDetailComponent.pageDetailData" (save)="save($event)" (outputData)="pageDetailComponent.getOutputData($event)"></app-page-detail> -->
+    
+    <div style="width:100%" *ngIf="optionGroup">
+        <div style="display: flex;width: 100%;margin-top: 10px;align-items: flex-end;">
+            <div style="width:50%">
+                <label class="displayText">Name :</label>
+                <nz-form-item>
+                    <nz-form-control nzErrorTip="Option Group Ma,e is required!">
+                      <nz-input-group>
+                        <input nz-input class="inputWidth" [(ngModel)]="optionGroup.name"/>
+                      </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div style="width:50%">
+                <label class="displayText">Active :</label>
+                <nz-form-item>
+                    <nz-form-control nzErrorTip="Actice is required!">
+                      <nz-input-group>
+                        <input nz-input class="inputWidth" [(ngModel)]="optionGroup.active"/>
+                      </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>                        
+            </div>                
+        </div>                        
+        <div >
+            <div nz-row style="display: flex;width: 100%;">
+                <div style="width: 100%;">
+                    <label class="displayText">Add-Ons：</label>
+                    <ng-container *ngFor="let o of Items">
+                        <div class="headerInfo">
+                            <div class="menuRow" style="padding: 5px" >
+                                <label nz-checkbox [nzChecked]="o.checked" (nzCheckedChange)="updateSingleChecked($event,o.code,o)">{{o.code}} - {{o.name}}</label>
+                            </div>
+                        </div>      
+                    </ng-container> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

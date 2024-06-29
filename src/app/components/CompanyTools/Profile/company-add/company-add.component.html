@@ -1,0 +1,56 @@
+<div class="contain-inter">
+    <app-page-header [HeaderItems]="pageHeader" (initPage)="init()"></app-page-header>
+    <button id="saveButton" style="display:none"(click)="saveDetail();">Save button</button>
+    <div class="tableShow-area"  style="height: fit-content;">
+        <!-- <div class="">
+            <nz-alert nzBanner nzMessage="Unselect 'Hide Legacy Releases' to check more interoperability." nzCloseable></nz-alert>
+        </div> -->
+        <div class="tableShow-table">
+            <div [formGroup]="DetailForm">
+                <div style="display: flex;width: 100%;margin-top: 10px;">
+                    <div style="width:50%">
+                        <label class="displayText">Company Name：</label>
+                        <nz-form-item>
+                            <nz-form-control nzErrorTip="Company Name is required!">
+                             <nz-input-group>
+                                <input nz-input class="inputWidth" [(ngModel)]="name" formControlName="name"/>
+                             </nz-input-group>
+                           </nz-form-control>
+                       </nz-form-item> 
+                    </div>
+                    <div style="width:50%">
+                        <label class="displayText">Registration No：</label>
+                        <nz-form-item>
+                            <nz-form-control nzErrorTip="Registration No is required!">
+                              <nz-input-group>
+                                <input nz-input class="inputWidth" [(ngModel)]="registrationNo" formControlName="registrationNo"/>
+                              </nz-input-group>
+                            </nz-form-control>
+                        </nz-form-item>   
+                    </div>
+                </div> 
+                <div style="display: flex;width: 100%;margin-top: 10px;">
+                    <div style="width:50%">
+                        <label class="displayText">Telephone No</label>
+                        <nz-form-item>
+                            <nz-form-control nzErrorTip="Telephone No is required!">
+                             <nz-input-group>
+                                <input nz-input class="inputWidth" [(ngModel)]="telephoneNo" formControlName="telephoneNo"/>
+                             </nz-input-group>
+                           </nz-form-control>
+                       </nz-form-item> 
+                    </div>
+                    <div style="width:50%">
+                        <label class="displayText">Address：</label>
+                        <nz-form-item>
+                            <nz-form-control nzErrorTip="Address is required!">
+                              <nz-input-group>
+                                <input nz-input class="inputWidth" [(ngModel)]="address" formControlName="address"/>
+                              </nz-input-group>
+                            </nz-form-control>
+                        </nz-form-item>   
+                    </div>
+                </div>                
+            </div>
+    </div>
+</div>

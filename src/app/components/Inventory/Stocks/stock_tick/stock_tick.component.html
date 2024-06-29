@@ -1,0 +1,198 @@
+<div class="contain-inter">
+    <!-- <div class="tableShow-area"   -->
+    <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+        <h2 style="float:left;"><span>Stock Tick 点货单</span></h2>
+        <div style="float:right">
+            <nz-button-group nzSize="small" class="tableBut" >
+                <button nzType="primary"  nz-button
+                    (click)="loadStockCheckList(purchase_date)">Load / 查看记录</button>
+            </nz-button-group>
+        </div>
+    </div>
+    <div class="tableShow-area"  style="height: fit-content;"
+        >
+        <style>
+            .displayText{
+                width:250px;
+            }
+            .inputWidth{
+                width:95%;
+            }
+        </style>
+        <div class="tableShow-table">
+            <div style="width:100%" [formGroup]="dateForm">
+                <div nz-row style="display: flex;width: 100%;">
+                    <div style="width: 100%;">                        
+                        <label class="displayText">Date / 日期 :</label>
+                        <!-- <label >{{purchase_date}}</label> -->
+                        <nz-form-item>
+                            <nz-form-control nzErrorTip="Date is required!">
+                              <nz-input-group>
+                                <input nz-input type="date" [(ngModel)]="purchase_date" formControlName="purchase_date" />
+                              </nz-input-group>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
+            </div>            
+            <div style="width:100%">
+                <app-outlet (getOutletEvent)="getOutlet($event)"></app-outlet>
+            </div>
+            <div *ngIf="categoryType!=1" style="width: 100%;">
+                <app-vertical-tabs [menuViewType]="menuViewType" (returnResult)="getSearchValue($event)" [modeView]="modeView" [priceType]="pType" [searchFormData]="searchValue" [dateFormData]="purchase_date" [tabFormData]="ProductTypes"></app-vertical-tabs>
+                <!-- <label class="displayText">Product Name / 货名 :</label>
+                <div style="display:none"> <app-product_search_engine mode="ProductDetail" [itemCode]="itemCode" (searchResult)="getSearchValue($event)" [pagination]="paginationData"></app-product_search_engine> </div>
+                <nz-select nzShowSearch class="inputWidth"
+                    [(ngModel)]="item_index"
+                    (ngModelChange)="ItemChange($event)"                    
+                    nzPlaceHolder="Select a Solution">
+                    <ng-container *ngFor="let p of Items; let i = index">Items
+                        <nz-option  *ngIf="Items" [nzValue]="p.code" [nzLabel]="p.code + '-' + p.name"></nz-option>
+                    </ng-container>
+                    
+                    <nz-option *ngIf="!Items" nzDisabled nzCustomContent>
+                        <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                    </nz-option>
+                </nz-select> -->
+            </div>
+            <div *ngIf="categoryType==1" class="butArea" style="border: 2px solid grey;  margin-top: 10px;">
+                <div style="padding:5px" style="border-bottom: 2px solid grey;padding: 10px;">
+                    <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+                        <h3 style="float:left;"><span>Product List / 货单</span></h3>
+                        <div style="float:right">
+                            <nz-button-group nzSize="small" class="tableBut" >
+                                <button nzType="primary"  nz-button 
+                                    (click)="addItems(item_code,item_quantity,item_unit_cost,total_amount)">Add Item</button>
+                                    <!-- [disabled]="tableEmpty" -->
+                            </nz-button-group>
+                        </div>
+                    </div>
+                    <div nz-row style="display: flex;width: 100%;">
+                        <div style="width: 100%;">
+                            <label class="displayText">Product Code / 货名 :</label>
+                            <input nz-input  id="itemcode" [(ngModel)]="item_code" (keyup.enter)="InputChange($event)" />
+                            <img style="width:100px;height:100px"  [src]="formatImage(imagefile)" />
+                            <!-- 
+                                (ngModelChange)="InputChange($event)"  
+                                <nz-button-group nzSize="small" class="tableBut" >
+                                <button nzType="primary" title="" nz-button
+                                    (click)="searchProduct()">Search / 寻找记录</button>
+                            </nz-button-group> -->
+                            <nz-select id="productItems" nzShowSearch class="inputWidth"
+                                [(ngModel)]="item_index"
+                                (ngModelChange)="ItemChange($event)"                    
+                                nzPlaceHolder="Select a Solution">
+                                <ng-container *ngFor="let p of Products; let i = index">Items
+                                    <nz-option  *ngIf="!ProductLoadSel" [nzValue]="i" [nzLabel]="p.supplier.name + ' - ' + p.name"></nz-option>
+                                </ng-container>
+                                
+                                <nz-option *ngIf="ProductLoadSel" nzDisabled nzCustomContent>
+                                    <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                                </nz-option>
+                            </nz-select>
+                        </div>
+                    </div>
+                    <div [formGroup]="stockCheckForm">
+                        <div style="display: flex;width: 100%;margin-top: 10px;">
+                            <div style="width:50%;">
+                                <label class="displayText">Product Name / 货名 ：</label>
+                                <label class="displayText">{{item_name}}</label>
+                            </div>
+                            <div style="width:50%;">
+                                <label class="displayText">Quantity / 数量 ：</label>
+                                <nz-form-item>
+                                    <nz-form-control nzErrorTip="Item Quantity is required and must be a number!">
+                                      <nz-input-group>
+                                        <input nz-input id="itemquantity" formControlName="item_quantity" [(ngModel)]="item_quantity" (keyup.enter)="qtyChange($event)"/>
+                                      </nz-input-group>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div> 
+                        <div style="display: flex;width: 100%;margin-top: 10px;">
+                            <div style="width:50%;">
+                                <label class="displayText">Unit Cost / 单价 :</label>
+                                <nz-form-item>
+                                    <nz-form-control nzErrorTip="Item Unit Cost is required and must be a number!">
+                                    <nz-input-group  nzSuffix="MYR" nzPrefix="RM">
+                                        <input nz-input formControlName="item_unit_cost" [(ngModel)]="item_unit_cost" />
+                                    </nz-input-group>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+                <div [style.height]="'30px'" class="tableTop">
+                    <div class="thLeft" style="width:100%">
+                        <a class="columns" style="pointer-events: auto;"
+                             nz-dropdown
+                            nzTrigger="click" [nzDropdownMenu]="menu">
+                            <span>
+                                Listing
+                            </span>
+                        </a>
+                        <nz-dropdown-menu #menu="nzDropdownMenu">
+                            <div class="dropDownCls">
+                                <div class="Down-header">Show Columns</div>
+                                <nz-checkbox-wrapper style="width: 100%;" >
+                                </nz-checkbox-wrapper>
+                            </div>
+                        </nz-dropdown-menu>
+                    </div>
+                </div>
+                <nz-table  [nzScroll]="{ x: '1150px' }"   [nzData]="productListData" nzBordered nzSize="small"
+                    nzHideOnSinglePage="true" [nzFrontPagination]="false" [nzNoResult]="emptyTemplate">
+                    <ng-template #emptyTemplate>
+                        <tr>
+                            <nz-empty *ngIf="NoResultId=='No Data'" nzNotFoundImage="simple"></nz-empty>
+                            <nz-empty *ngIf="NoResultId=='No Result'" nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                                [nzNotFoundContent]="contentTpl">
+                                <ng-template #contentTpl>
+                                    <span> {{NoResultId}} </span>
+                                </ng-template>
+                            </nz-empty>
+                        </tr>
+                    </ng-template>
+                    <thead>
+                        <tr>
+                            <ng-container *ngFor="let p of headerColumn">
+                                <th  class="firstTh" style="text-align: center;z-index: 20;"
+                                    [colspan]="1">
+                                    {{p}}
+                                </th>
+                            </ng-container>
+                        </tr>
+                        
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let p of stockChecks.stockCheck,let i = index">
+                            <tr >
+                                <td>
+                                    {{p.productId}} - {{p.productName}}
+                                </td>  
+                                <td>
+                                    {{p.quantity}}
+                                </td> 
+                                <td>
+                                    {{p.unitCost}}
+                                </td>  
+                                <td>
+                                    {{p.total}}
+                                </td>  
+                                <td>
+                                    <button nzType="primary" nz-button 
+                                    (click)="deleteItem(i)">Delete</button>                                    
+                                </td>
+                                   
+                            </tr>    
+                        </ng-container>
+                        
+                    </tbody>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+</div>
+<ngx-loading [show]="isVisible" [config]="{ backdropBorderRadius: '3px'}" [template]="customLoadingTemplate">
+</ngx-loading>

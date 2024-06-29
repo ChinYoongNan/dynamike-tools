@@ -1,0 +1,81 @@
+<app-product_search_engine mode="Product" type="foodMenu" (searchResult)="getSearchValue($event)" ></app-product_search_engine>
+<button id="stockTickButton" style="display: none;"  (click)="stockTick()"></button> 
+<button id="updateButton" style="display: none;"  (click)="updateProduct()"></button> 
+<button id="selectedButton" style="display: none;"  (click)="selectMenu()"></button> 
+<button id="validButton" style="display: none;"  (click)="updateValid()"></button> 
+<button id="viewButton" style="display: none;"  (click)="goToDetails()"></button> 
+<nz-tabset  *ngIf="menuViewType == 'menu'" [nzSelectedIndex]="Selected" (nzSelectedIndexChange)="change($event)" style="font-family: Metropolis;">
+  <nz-tab [nzTitle]="'All'">
+    <app-table (updatedData)="dynamike.getUpdatedData($event)" 
+      (selectedIndex)="dynamike.getSelectedIndex($event)" 
+      [tableInputData]="searchValue"
+      [notifier]="searchTableData" 
+      [tableSettings]="tableSettings" 
+      [tableHeaderData]="headerData"></app-table>
+  </nz-tab>
+  <ng-container *ngFor="let tabData of tabFormData; let i = index;">
+    <nz-tab [nzTitle]="tabData.description">
+      <app-table (updatedData)="dynamike.getUpdatedData($event)" 
+      (selectedIndex)="dynamike.getSelectedIndex($event)" 
+      [notifier]="tableData[i]" 
+      [tableSettings]="tableSettings" 
+      [tableHeaderData]="headerData" 
+      (nextPage)="dynamike.nextPageSetting($event,this,nextPage)"></app-table>
+    </nz-tab>
+  </ng-container>
+</nz-tabset>
+<ng-container *ngIf="menuViewType =='order'">
+  <app-vertical-list (updatedData)="dynamike.getUpdatedData($event)" 
+        (selectedIndex)="dynamike.getSelectedIndex($event)" 
+        [notifier]="searchTableData" 
+        [tableSettings]="tableSettings" 
+        [tableHeaderData]="headerData" 
+        (nextPage)="dynamike.nextPageSetting($event,this,nextPage)"></app-vertical-list>  
+    <ng-container *ngFor="let tabData of tabFormData; let i = index">
+      <nz-collapse nzAccordion>          
+        <nz-collapse-panel [nzHeader]="tabData.description" (nzActiveChange)="change(i)" >
+          <nz-collapse [nzAccordion]="false">  
+            <app-vertical-list (updatedData)="dynamike.getUpdatedData($event)" 
+            (selectedIndex)="dynamike.getSelectedIndex($event)" 
+            [notifier]="tableData[i]" 
+            [tableSettings]="tableSettings" 
+            [tableHeaderData]="headerData" 
+            (nextPage)="dynamike.nextPageSetting($event,this,nextPage)"></app-vertical-list>      
+          </nz-collapse>
+                <!-- <ng-container *ngFor="let p of data.product">
+                    <nz-collapse [nzAccordion]="false" >  
+                        <div class="headerInfo">
+                            <div class="menuRow" style="padding: 5px" (click)="open(p.id, p.code)">
+                                {{p.code}} - {{p.name}}
+                            </div>
+                          </div>        
+                    </nz-collapse>
+                </ng-container>  -->
+        </nz-collapse-panel>  
+      <!-- <ng-template #elseCollapsePanelTemplate>
+          <nz-collapse-panel [nzHeader]="data.description" [nzActive]="false">
+          </nz-collapse-panel> 
+      </ng-template> -->
+      </nz-collapse>
+    </ng-container>  
+</ng-container> 
+<!-- <nz-tabset  *ngIf="menuViewType =='order'" [nzSelectedIndex]="Selected" (nzSelectedIndexChange)="change($event)" style="font-family: Metropolis;">
+  <nz-tab *ngIf="searchValue" [nzTitle]="'All'">
+    <app-vertical-list (updatedData)="dynamike.getUpdatedData($event)" 
+      (selectedIndex)="dynamike.getSelectedIndex($event)" 
+      [tableInputData]="searchValue"
+      [notifier]="searchTableData" 
+      [tableSettings]="tableSettings" 
+      [tableHeaderData]="headerData"></app-vertical-list>
+  </nz-tab>
+  <ng-container *ngFor="let tabData of tabFormData; let i = index;">
+    <nz-tab [nzTitle]="tabData.description">
+      <app-vertical-list (updatedData)="dynamike.getUpdatedData($event)" 
+      (selectedIndex)="dynamike.getSelectedIndex($event)" 
+      [notifier]="tableData[i]" 
+      [tableSettings]="tableSettings" 
+      [tableHeaderData]="headerData" 
+      (nextPage)="dynamike.nextPageSetting($event,this,nextPage)"></app-vertical-list>
+    </nz-tab>
+  </ng-container>
+</nz-tabset> -->

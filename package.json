@@ -1,0 +1,121 @@
+{
+  "name": "com.dynamike.app",
+  "displayName": "DynamikeApp",
+  "version": "1.0.0",
+  "description": "A application that record business transaction.",
+  "main": "main.js",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --proxy-config proxyconfig.json",
+    "build": "ng build",
+    "build-prod": "ng build --configuration prod --base-href .",
+    "android-prod": "cordova build android --release -- --keystore=./dynamike.keystore --storePassword=dynamike123 --alias=dynamike-tools --password=dynamike123 --packageType=bundle  --versionCode=10013 --versionName=1.0",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e",
+    "electron": "electron .",
+    "electron-build": "ng build && electron www",
+    "package-asar": "electron-packager . --overwrite --asar --electron-version=13.4.0 --platform=win32 --arch=ia32 --prune=true --out=release-builds --icon=./build/logo.ico --version-string.FileDescription=CE --version-string.ProductName=DynamikeApp",
+    "package": "electron-packager . --overwrite --electron-version=13.4.0 --platform=win32 --arch=ia32 --prune=true --out=release-builds --icon=./build/logo.ico --version-string.FileDescription=CE --version-string.ProductName=DynamikeApp",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=build/dynamike.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . --overwrite --platform=win32 --arch=ia32 --icon=build/logo.ico --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=DynamikeApp",
+    "package-linux": "electron-packager . --overwrite --asar=true --platform=linux --arch=x64 --icon=build/logo.png --prune=true --out=release-builds",
+    "builder": "electron-builder",
+    "builder-test": "echo \"Error: no test specified\" && exit 1",
+    "builder-watch": "nodemon --exec electron ."
+  },
+  "repository": "https://github.com/ChinYoongNan/dynamike-tools",
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
+  "build": {
+    "win": {
+      "target": [
+        {
+          "target": "nsis"
+        }
+      ]
+    },
+    "productName": "DynamikeApp",
+    "appId": "com.dynamike.app",
+    "icon": "build/logo.ico",
+    "directories": {
+      "output": "release-output"
+    }
+  },
+  "author": "Dynamike",
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^0.1000.8",
+    "@angular/cli": "^10.2.4",
+    "@angular/compiler-cli": "~10.0.9",
+    "@angular/core": "~10.0.9",
+    "@types/bootstrap": "^4.6.6",
+    "@types/jasmine": "~3.5.0",
+    "@types/jasminewd2": "^2.0.13",
+    "@types/jquery": "^3.5.30",
+    "@types/node": "^12.20.55",
+    "codelyzer": "^6.0.0",
+    "cordova-android": "^12.0.0",
+    "electron-packager": "^15.5.1",
+    "jasmine-core": "~3.5.0",
+    "jasmine-spec-reporter": "~5.0.0",
+    "jquery": "^3.7.1",
+    "karma": "~5.0.0",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-coverage-istanbul-reporter": "~3.0.2",
+    "karma-jasmine": "~3.3.0",
+    "karma-jasmine-html-reporter": "^1.7.0",
+    "protractor": "~7.0.0",
+    "ts-node": "~8.3.0",
+    "tslint": "~6.1.0",
+    "typescript": "~3.9.5",
+    "electron": "^19.0.9",
+    "electron-builder": "^23.6.0",
+    "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "@angular/animations": "~10.0.9",
+    "@angular/common": "~10.0.9",
+    "@angular/compiler": "~10.0.9",
+    "@angular/core": "~10.0.9",
+    "@angular/forms": "~10.0.9",
+    "@angular/material": "^10.2.7",
+    "@angular/platform-browser": "~10.0.9",
+    "@angular/platform-browser-dynamic": "~10.0.9",
+    "@angular/router": "~10.0.9",
+    "@clr/angular": "^4.0.16",
+    "@clr/core": "^4.0.12",
+    "@clr/icons": "^4.0.16",
+    "@clr/ui": "^4.0.16",
+    "@fortawesome/angular-fontawesome": "0.5.0",
+    "@fortawesome/fontawesome-svg-core": "1.2.22",
+    "@fortawesome/free-brands-svg-icons": "5.10.2",
+    "@fortawesome/free-solid-svg-icons": "5.10.2",
+    "@types/intro.js": "^2.4.3",
+    "@webcomponents/webcomponentsjs": "^2.8.0",
+    "angular-csv-files": "^1.0.0",
+    "angularx-qrcode": "^10.0.12",
+    "bootstrap": "^3.3.7",
+    "html5-qrcode": "^2.3.8",
+    "intro.js": "^2.9.3",
+    "moment": "^2.30.1",
+    "ng-zorro-antd": "^9.3.0",
+    "ng2-pdf-viewer": "^7.0.2",
+    "ngx-barcode": "^0.3.0",
+    "ngx-loading": "^8.0.0",
+    "node-gyp": "^9.4.1",
+    "node-properties-parser": "0.0.2",
+    "rxjs": "~6.5.5",
+    "rxjs-compat": "^6.6.3",
+    "tslib": "^2.6.3",
+    "zone.js": "~0.10.3",
+    "electron-updater": "^5.3.0"
+  },
+  "cordova": {
+    "plugins": {},
+    "platforms": [
+      "android"
+    ]
+  }
+}

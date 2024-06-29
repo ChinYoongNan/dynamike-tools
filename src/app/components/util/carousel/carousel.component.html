@@ -1,0 +1,46 @@
+
+  <style>
+    [nz-carousel-content] {
+        text-align: center;
+        height: 200px;
+        line-height: 160px;
+        /* background: #364d79; */
+        color: #fff;
+        overflow: hidden;
+      }
+  </style>
+  <nz-carousel >
+    <div nz-carousel-content *ngFor="let data of tableData">      
+      <ng-container *ngFor="let key of tableHeaderData" >      
+        <nz-card nzHoverable [nzCover]="coverTemplate" [nzActions]="[actionSetting, actionEdit, actionEllipsis]">
+          <nz-card-meta [nzTitle]="data[key.title] + ' - RM' + data[key.price]" [nzDescription]="data[key.desc]"></nz-card-meta>
+        </nz-card>
+        <ng-template #coverTemplate>
+          <img style="width:100%;height:250px"  [src]="formatImage(data[key.image])" />   
+        </ng-template>
+        <ng-template #avatarTemplate>
+          <nz-avatar nzSrc="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+        </ng-template>
+        <ng-template #actionSetting>
+          <span nz-icon nzType="setting"></span>
+        </ng-template>
+        <ng-template #actionEdit>
+          <span nz-icon nzType="edit"></span>
+        </ng-template>
+        <ng-template #actionEllipsis>
+          <span nz-icon nzType="ellipsis"></span>
+        </ng-template>
+      </ng-container>
+    </div>
+  </nz-carousel>
+ <!-- <nz-carousel >
+    <div nz-carousel-content *ngFor="let data of tableData">      
+      <ng-container *ngFor="let key of tableHeaderData" >      
+        <nz-card nzHoverable  >
+          <img style="width:100%;height:100%"  [src]="formatImage(data[key.image])" />   
+        </nz-card>
+        <ng-template #coverTemplate>
+        </ng-template>
+      </ng-container>
+    </div>
+  </nz-carousel> -->

@@ -1,0 +1,169 @@
+<div class="contain-inter" style="height: fit-content;">
+    <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+        <button id="round" nzShape="circle" nz-button nzType="primary" (click)="reset();init()"  ><i nz-icon nzType="reload"></i></button>
+        <h2 style="float:left;"><span>粮单 PaySlip</span></h2>   
+        <div style="float:right">
+            <button id="receipt" nzType="primary" nz-button (click)="generatePayslip()">Generate Payslip</button>
+        </div>
+    </div>
+    <div class="tableShow-area"  style="height: fit-content;">
+        <div class="tableShow-table">
+            <div nz-row style="width:100%">
+                <div nz-row style="display: flex;width: 100%;"> 
+                    <div style="width:100%">
+                        <div nz-row style="display: flex;width: 100%;">
+                            <div style="width: 100%;">   
+                                <label class="displayText">Year: </label>
+                                <nz-date-picker style="width:100%" nzMode="year" nzFormat="yyyy"[(ngModel)]="year"></nz-date-picker> 
+                                <div style="width:100%">
+                                    <label class="displayText">Month：</label>
+                                    <nz-date-picker style="width:100%" nzMode="month" [(ngModel)]="month" nzFormat="MMM"></nz-date-picker>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                    <div style="width:100%"> 
+                        <label class="displayText">Staff / 员工</label>
+                        <nz-input-group>     
+                            <nz-select [(ngModel)]="staff" style="width:100%"                            
+                                (ngModelChange)="selectedStaff($event)" 
+                                nzPlaceHolder="Select a Staff">
+                                <ng-container *ngFor="let p of staff_list;let i = index">
+                                    <nz-option [nzValue]="i" [nzLabel]="p.code + '-' + p.name"></nz-option>
+                                </ng-container>
+                            </nz-select>
+                        </nz-input-group>
+                    </div>
+                    <div style="width: 100%;">                           
+                        <label class="displayText">Date of Payment/ 日期</label>
+                        <nz-input-group >                            
+                        <input nz-input  type="date" [(ngModel)]="date" />
+                        </nz-input-group>
+                    </div>
+                </div>
+                <label class="displayText" style="margin-top:20px">Period</label>    
+                <div nz-row style="display: flex;width: 100%;">                                   
+                    <div style="width:50%">                        
+                        <label class="displayText">Start Date / 日期</label>
+                        <nz-input-group >                            
+                        <input nz-input  type="date" [(ngModel)]="startdate" />
+                        </nz-input-group>
+                    </div>
+                    <div style="width:50%">                        
+                        <label class="displayText">End Date / 日期</label>
+                        <nz-input-group >                            
+                        <input nz-input  type="date" [(ngModel)]="enddate" />
+                        </nz-input-group>
+                    </div>
+                </div>
+            
+            <div class="butArea" style="border: 2px solid grey;  margin-top: 10px;">
+                <div style="padding:5px" style="border-bottom: 2px solid grey;padding: 10px;">
+                    <div style="width:100%;display:inline-block;border-bottom: orangered 1px solid;">
+                        <h3 style="float:left;"><span>Staff</span></h3>
+                        <div style="float:right">
+                            <nz-button-group nzSize="small" class="tableBut" >
+                                <button nzType="primary"  nz-button 
+                                    (click)="saveStaff()">Save</button>
+                            </nz-button-group>
+                        </div>
+                    </div>
+                    <div nz-row style="display: flex;width: 100%;">                                           
+                        <div style="width:50%">
+                            <label class="displayText">Employee Code</label>
+                            <nz-input-group>
+                                <input nz-input [(ngModel)]="code" />
+                            </nz-input-group>
+                        </div>
+                        <div style="width:50%">
+                            <label class="displayText">IC No</label>
+                            <nz-input-group>
+                                <input nz-input [(ngModel)]="ic" />
+                            </nz-input-group>
+                        </div>
+                                           
+                        <div style="width:100%">
+                            <label class="displayText">Name</label>
+                            <nz-input-group >
+                                <input nz-input [(ngModel)]="name" />
+                            </nz-input-group>
+                        </div>
+                        <div style="width:100%">
+                            <label class="displayText">Designation</label>
+                            <nz-input-group >
+                                <input nz-input [(ngModel)]="designation" />
+                                <!-- <nz-select [(ngModel)]="designation" style="width:100%"
+                                    nzPlaceHolder="Select a Month">
+                                    <nz-option
+                                        [nzValue]="null" [nzLabel]="All"></nz-option>
+                                    <ng-container *ngFor="let p of month">
+                                        <nz-option [nzValue]="p.id" [nzLabel]="p.value"></nz-option>
+                                    </ng-container>
+                                </nz-select> -->
+                            </nz-input-group>
+                        </div>
+                        <div style="width:100%">                        
+                            <label class="displayText">Payment Mode</label>
+                            <nz-input-group>       
+                                <input nz-input [(ngModel)]="paymentmode" />                     
+                                <!-- <nz-select  [(ngModel)]="paymentmode" style="width: 100%" 
+                                    nzPlaceHolder="Select a Price Type">
+                                    <ng-container *ngFor="let p of staff_list">
+                                        <nz-option [nzValue]="p.value" [nzLabel]="p.value"></nz-option>
+                                    </ng-container>
+                                </nz-select> -->
+                            </nz-input-group>
+                        </div>
+                        <div nz-row style="width:100%">
+                            <div style="width:50%">                        
+                                <label class="displayText">Bank</label>
+                                <nz-input-group>                     
+                                    <input nz-input [(ngModel)]="bankcode" />                
+                                    <!-- <nz-select  [(ngModel)]="bankcode" style="width: 100%" 
+                                        nzPlaceHolder="Select a Price Type">
+                                        <ng-container *ngFor="let p of staff_list">
+                                            <nz-option [nzValue]="p.value" [nzLabel]="p.value"></nz-option>
+                                        </ng-container>
+                                    </nz-select> -->
+                                </nz-input-group>
+                            </div>
+                            <div style="width:50%">
+                                <label class="displayText">Account No</label>
+                                <nz-input-group >
+                                    <input nz-input [(ngModel)]="acctno" />
+                                </nz-input-group>
+                            </div>
+                        </div>                                           
+                        <div style="width:100%">
+                            <label class="displayText">Total Working Hour</label>                            
+                            <nz-input-group  [nzAddOnAfter]="WorkingHourButton">     
+                                <input nz-input   type="text" nz-input placeholder="input search text" [(ngModel)]="hours" #search />
+                            </nz-input-group>
+                            <ng-template #WorkingHourButton>
+                                <button nzType="primary"  nz-button 
+                                    (click)="calculateHourlyWagesPerMonth(code)">Calculate Hours</button>
+                            </ng-template>
+                        </div>                                       
+                        <div style="width:100%">
+                            <label class="displayText">Basic Salary</label>
+                            <nz-input-group nzSuffix="MYR" nzPrefix="RM">
+                                <input nz-input [(ngModel)]="basic" />
+                            </nz-input-group>
+                        </div>
+                                           
+                        <div style="width:100%">
+                            <label class="displayText">Commission</label>
+                            <nz-input-group nzSuffix="MYR" nzPrefix="RM" [nzAddOnAfter]="CommissionButton">
+                                <input nz-input [(ngModel)]="commission" />
+                            </nz-input-group>
+                            <ng-template #CommissionButton>
+                                <button nzType="primary"  nz-button 
+                                    (click)="calculateCommissionPerMonth(code)">Calculate Commission</button>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

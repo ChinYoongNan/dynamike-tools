@@ -1,0 +1,45 @@
+<div class="ph-header">   
+  <div class="logo-container" (click)="home()">
+        
+        <img
+        style="width:150px;height:55px;padding-top: 5px;"
+        alt="Dynamike Logo"
+        aria-label="Dynamike Logo"
+        src="https://drive.google.com/thumbnail?id=1CGemN8rWrjgVDKu60PQ3fDYXAVBfIUlZ"
+      /> 
+    <!-- <a href="/" class="nav-link" style="position: relative;top: 3px;">
+      
+      <span style="font-family: Amazing Slab;">DYNAMIKE</span>
+    </a> -->
+  </div>
+  <div class="ph-header-actions">
+    <a id="loginLink" *ngIf="!isLogin ;else usertemplate" (click)="logIn()" target="_blank" class="nav-link">Login</a>
+    <nz-drawer
+      [nzVisible]="visible"
+      nzPlacement="right"
+      [nzTitle]="title"
+      nzWidth="100%"
+      (nzOnClose)="close()"
+    >
+        
+      <button style="float:right" nz-button nzType="primary" (click)="logout()">Logout</button>
+      <br/>
+      <ng-container>
+        <nz-collapse nzAccordion>          
+          <nz-collapse-panel [nzHeader]="'Virtiual Card'" [nzActive]="true">
+            <app-virtual-card></app-virtual-card>
+          </nz-collapse-panel>          
+          <!-- <nz-collapse-panel *ngIf="!isStaff" [nzHeader]="'PaySlip'" [nzActive]="true">
+            <app-profile></app-profile>
+          </nz-collapse-panel> -->
+        </nz-collapse>
+      </ng-container>
+    </nz-drawer>
+    <ng-template #usertemplate>
+      <a nz-dropdown  (click)="showDefault()">
+        <i nz-icon nzType="user"></i>
+        {{user.username}}
+      </a>
+    </ng-template>
+  </div>
+</div>

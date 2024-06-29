@@ -1,0 +1,31 @@
+<div class="contain-inter" >
+    <app-page-header [HeaderItems]="pageHeader" (initPage)="init()"></app-page-header>
+    <div style="display: inline;margin-left:250px">                    
+        <div style="width:100%;">
+            <nz-form-item>
+            <nz-form-label nzFor="product_name">Supplier</nz-form-label>
+            <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
+                <input nz-input   type="text" nz-input placeholder="input search text" [(ngModel)]="name" (keyup.enter)="searchSupplier()" />
+            </nz-input-group>
+            <ng-template #suffixButton>
+                <button nzType="primary" nz-button
+                        (click)="searchSupplier()">Search / 寻找记录</button>
+            </ng-template>
+            </nz-form-item>   
+        </div>    
+    </div> 
+    <div  class="tableShow-area"  style="height: fit-content">
+        
+    <app-table (updatedData)="getUpdatedData($event)" 
+    (selectedIndex)="getSelectedIndex($event)" 
+    [notifier]="tableData" 
+    [tableSettings]="tableSettings" 
+    [tableHeaderData]="headerData" 
+    (nextPage)="nextPageSetting($event,this,nextPage)"></app-table>
+        <!-- <app-table (updatedData)="getUpdatedData($event)" (selectedIndex)="getSelectedIndex($event)" [notifier]="tableData" [tableSettings]="tableSettings" [tableHeaderData]="headerData" ></app-table> -->
+    </div>
+    <button id="deleteButton" (click)="deleteSupplier()" ></button>
+    <button id="updateButton"  (click)="updateSupplier()"></button>    
+</div>
+<ngx-loading [show]="isVisible" [config]="{ backdropBorderRadius: '3px'}" [template]="customLoadingTemplate">
+</ngx-loading>
