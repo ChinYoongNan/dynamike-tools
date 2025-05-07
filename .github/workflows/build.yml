@@ -1,68 +1,46 @@
-name: Release Electron App (GitLab to GitHub)
+name: GitLab to GitHub Release
 
 on:
   push:
     tags:
-      - "1.0.*"  # Triggers on tags like 1.0.1, 1.0.2
+      - "1.0.*"  # Trigger on tags like 1.0.1
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Allow creating releases
+
     steps:
-      # 1. Clone from GitLab (SSH)
+      # 1. Clone from GitLab
       - name: Checkout GitLab repo
         uses: actions/checkout@v4
         with:
           repository: gitlab.com/yoongnan/dynamike-tools
-          token: ${{ secrets.GITLAB_ACCESS_TOKEN }}
-          fetch-depth: 0  # Required for full git history
+          ssh-key: ${{ secrets.GITLAB_SSH_KEY }}
+          fetch-depth: 0
 
-      # 2. Setup environment
+      # 2. Build Electron app
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
 
-      # 3. Install with cleanup
       - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
         run: |
-          npm ci --no-audit
-          npm run postinstall  # Rebuild native modules
+          npm run build-prod
+          npm run builder -- --win --mac  # Only build .exe/.dmg
 
-      # 4. Build process
-      - name: Build production app
-        run: npm run build-prod
-
-      - name: Multi-platform build
-        run: npm run builder-all  # Uses your electron-builder -mwl
-
-      # 5. Prepare release
-      - name: Get version metadata
-        id: version
-        run: |
-          echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-          echo "changelog=$(git log --pretty=format:'- %s' $(git describe --tags --abbrev=0)^..HEAD)" >> $GITHUB_OUTPUT
-
-      # 6. GitHub Release
-      - name: Publish Release
+      # 3. Release to GitHub
+      - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref_name }}
-          name: "v${{ steps.version.outputs.version }}"
-          body: |
-            ### Changes
-            ${{ steps.version.outputs.changelog }}
-
-            ### Downloads
-            Built for Windows, macOS, and Linux
           files: |
             dist/*.exe
             dist/*.dmg
-            dist/latest.yml          # Auto-updater files
-            dist/latest-mac.yml
-            dist/latest-win.yml
-          draft: false
-          prerelease: false
+            dist/latest*.yml
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Auto-injected
