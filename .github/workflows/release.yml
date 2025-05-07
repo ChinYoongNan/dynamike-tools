@@ -39,8 +39,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/*.exe
-            dist/*.dmg
-            dist/latest*.yml
+            release-output/*.exe
+            release-output/*.dmg
+            release-output/latest*.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Auto-injected
