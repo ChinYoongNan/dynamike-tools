@@ -1,47 +1,69 @@
-name: Release Electron App
+name: Release Electron App (GitLab to GitHub)
 
 on:
   push:
     tags:
-      - "1.0.*"  # Now triggers on tags like 1.0.1, 1.0.2, etc.
+      - "1.0.*"  # Triggers on tags like 1.0.1, 1.0.2
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      # 1. Clone from GitLab (SSH)
+      - name: Checkout GitLab repo
         uses: actions/checkout@v4
+        with:
+          repository: gitlab.com/your-username/your-repo
+          ssh-key: ${{ secrets.GITLAB_SSH_KEY }}
+          fetch-depth: 0  # Required for full git history
 
+      # 2. Setup environment
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: "npm"
 
+      # 3. Install with cleanup
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm ci --no-audit
+          npm run postinstall  # Rebuild native modules
 
+      # 4. Build process
       - name: Build production app
         run: npm run build-prod
 
-      - name: Package with electron-builder
-        run: npm run builder-all
+      - name: Multi-platform build
+        run: npm run builder-all  # Uses your electron-builder -mwl
 
-      - name: Get version from package.json
+      # 5. Prepare release
+      - name: Get version metadata
         id: version
         run: |
           echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+          echo "changelog=$(git log --pretty=format:'- %s' $(git describe --tags --abbrev=0)^..HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Create GitHub Release
+      # 6. GitHub Release
+      - name: Publish Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref_name }}  # Uses the exact tag (e.g., 1.0.1)
-          name: "Release ${{ steps.version.outputs.version }}"
-          body: "Auto-generated release"
+          tag_name: ${{ github.ref_name }}
+          name: "v${{ steps.version.outputs.version }}"
+          body: |
+            ### Changes
+            ${{ steps.version.outputs.changelog }}
+
+            ### Downloads
+            Built for Windows, macOS, and Linux
           files: |
             dist/*.exe
             dist/*.dmg
             dist/*.AppImage
+            dist/*.deb
+            dist/*.rpm
             dist/latest*.yml
           draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
