@@ -13,8 +13,8 @@ jobs:
       - name: Checkout GitLab repo
         uses: actions/checkout@v4
         with:
-          repository: gitlab.com/your-username/your-repo
-          ssh-key: ${{ secrets.GITLAB_SSH_KEY }}
+          repository: gitlab.com/yoongnan/dynamike-tools
+          ssh-key: ${{ secrets.GITLAB_ACCESS_TOKEN }}
           fetch-depth: 0  # Required for full git history
 
       # 2. Setup environment
@@ -59,10 +59,9 @@ jobs:
           files: |
             dist/*.exe
             dist/*.dmg
-            dist/*.AppImage
-            dist/*.deb
-            dist/*.rpm
-            dist/latest*.yml
+            dist/latest.yml          # Auto-updater files
+            dist/latest-mac.yml
+            dist/latest-win.yml
           draft: false
           prerelease: false
         env:
