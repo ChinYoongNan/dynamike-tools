@@ -36,7 +36,7 @@ jobs:
           npm cache clean --force
           npm ci --legacy-peer-deps
           npm run build-prod
-          npm run builder-mac
+          npm run builder-mac -- --publish=never
 
           # Move output before cleanup
           mkdir -p ../release-output
