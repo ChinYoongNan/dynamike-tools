@@ -36,6 +36,7 @@ jobs:
         run: |
           git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/yoongnan/dynamike-tools.git
           cd dynamike-tools
+          npm cache clean --force
           npm ci --legacy-peer-deps
           npm install css-loader@latest --legacy-peer-deps
           npm run build-prod
