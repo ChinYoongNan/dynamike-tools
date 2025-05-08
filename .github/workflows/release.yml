@@ -16,6 +16,11 @@ jobs:
       - name: Checkout GitHub repository
         uses: actions/checkout@v3
 
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+          
       - name: Install nvm and Node.js
         run: |
           export NVM_DIR="$HOME/.nvm"
@@ -26,11 +31,6 @@ jobs:
           nvm use 16.7.0
           node -v
           npm -v
-
-      - name: Install Python setuptools (required for node-gyp)
-        run: |
-          python3 -m ensurepip
-          python3 -m pip install setuptools
 
       - name: Clone GitLab repo and build
         run: |
