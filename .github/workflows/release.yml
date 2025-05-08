@@ -1,4 +1,4 @@
-name: Release
+name: Build and Release
 
 on:
   workflow_dispatch:
@@ -9,51 +9,38 @@ on:
         default: ''
 
 jobs:
-  create-tag-and-build:
+  build:
     runs-on: macos-latest
+
     steps:
       - name: Checkout GitHub repository
         uses: actions/checkout@v3
 
-      - name: Check if tag exists on GitHub
-        id: check_tag
+      - name: Install nvm and Node.js
         run: |
-          TAG_EXISTS=$(curl --silent --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/ChinYoongNan/dynamike-tools/tags" | grep -o "${{ github.event.inputs.tag_name }}")
-          echo "Tag exists: $TAG_EXISTS"
-          if [ -z "$TAG_EXISTS" ]; then
-            echo "Tag does not exist. Creating and pushing tag."
-            git tag ${{ github.event.inputs.tag_name }}
-            git push origin ${{ github.event.inputs.tag_name }}
-          fi
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
+          # Install nvm (Node Version Manager)
+          export NVM_DIR="$HOME/.nvm"
+          mkdir -p $NVM_DIR
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+          source $NVM_DIR/nvm.sh
+          
+          # Install Node.js version 16.7.0
+          nvm install 16.7.0
+          nvm use 16.7.0
+          
+          # Verify Node.js and npm installation
+          node -v
+          npm -v
 
       - name: Clone GitLab repo and build
         run: |
-          # Clone the GitLab repository
           git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/your-group/your-private-repo.git source-code
           cd source-code
-          
-          # Install dependencies and build the app
           npm ci
           npm run builder-mac
-          
-          # Remove the source code directory to only keep the build artifacts
-          cd ..
-          rm -rf source-code
 
-      - name: Upload build artifacts (DMG and .latest.yml)
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: macos-build
           path: source-code/release-output/*.dmg
-          retention-days: 1  # Retain artifacts for 1 day, adjust as needed
-
-      - name: Upload latest.yml artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: latest-yml
-          path: source-code/release-output/latest*.yml
