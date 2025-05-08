@@ -40,24 +40,19 @@ jobs:
           npm run builder-mac -- --publish=never
 
           # Move output before cleanup
-          mkdir -p ../release-output
-          mv release-output/*.dmg release-output/*.yml ../release-output/
+          mkdir -p ../release-mac
+          mv release-output/*.dmg release-output/*.yml ../release-mac/
 
           # Clean up source code
           cd ..
           rm -rf dynamike-tools
           
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+      - name: Upload macOS Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: ${{ inputs.tag_name }}
-          name: Release ${{ inputs.tag_name }}
-          files: |
-            release-output/*.dmg
-            release-output/*.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-
+          name: mac-release
+          path: release-mac/*
+          
   build-win:
     name: Build Windows App
     runs-on: ubuntu-latest
@@ -90,9 +85,56 @@ jobs:
           npm run builder-win -- --publish=never
 
           # Move output before cleanup
-          mkdir -p ../release-output
-          mv release-output/*.exe release-output/*.yml ../release-output/
+          mkdir -p ../release-win
+          mv release-output/*.exe release-output/*.yml ../release-win/
 
           # Clean up source code
           cd ..
           rm -rf dynamike-tools
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [build-mac, build-win]
+    steps:
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: mac-release
+          path: mac-release
+
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: win-release
+          path: win-release
+          
+      - name: Upload Windows Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: win-release
+          path: release-win/*
+          
+      # - name: Create GitHub Release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     tag_name: ${{ inputs.tag_name }}
+      #     name: Release ${{ inputs.tag_name }}
+      #     files: |
+      #       release-output/*.dmg
+      #       release-output/*.yml
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ inputs.tag_name }}
+          name: Release ${{ inputs.tag_name }}
+          files: |
+            mac-release/*.dmg
+            mac-release/*.yml
+            win-release/*.exe
+            win-release/*.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
