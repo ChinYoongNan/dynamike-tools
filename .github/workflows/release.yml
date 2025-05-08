@@ -18,19 +18,19 @@ jobs:
 
       - name: Install nvm and Node.js
         run: |
-          # Install nvm (Node Version Manager)
           export NVM_DIR="$HOME/.nvm"
           mkdir -p $NVM_DIR
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
           source $NVM_DIR/nvm.sh
-          
-          # Install Node.js version 16.7.0
           nvm install 16.7.0
           nvm use 16.7.0
-          
-          # Verify Node.js and npm installation
           node -v
           npm -v
+
+      - name: Install Python setuptools (required for node-gyp)
+        run: |
+          python3 -m ensurepip
+          python3 -m pip install setuptools
 
       - name: Clone GitLab repo and build
         run: |
@@ -41,7 +41,7 @@ jobs:
           npm run build-prod
           npm run builder-mac
 
-          # Move output before cleanup (adjust path if needed)
+          # Move output before cleanup
           mkdir -p ../release-output
           mv release-output/*.dmg release-output/*.yml ../release-output/
 
@@ -49,6 +49,7 @@ jobs:
           cd ..
           rm -rf dynamike-tools
 
+      # Optional: Upload build artifacts to GitHub
       # - name: Upload build artifacts
       #   uses: actions/upload-artifact@v3
       #   with:
