@@ -1,46 +1,41 @@
-name: GitLab to GitHub Release
+name: Build macOS Electron App
 
 on:
-  push:
-    tags:
-      - "1.0.*"  # Trigger on tags like 1.0.1
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'GitLab tag reference'
+        required: true
+        default: 'refs/tags/v1.0.0'
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write  # Allow creating releases
+  build-macos:
+    runs-on: macos-latest
 
     steps:
-      # 1. Clone from GitLab
-      - name: Checkout GitLab repo
-        uses: actions/checkout@v4
-        with:
-          repository: gitlab.com/yoongnan/dynamike-tools
-          ssh-key: ${{ secrets.GITLAB_SSH_KEY }}
-          fetch-depth: 0
+      - name: Checkout minimal runner repo
+        uses: actions/checkout@v3
 
-      # 2. Build Electron app
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Clone source code from GitLab
+        run: |
+          git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/your-group/your-private-repo.git source-code
+          ls source-code
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: 16
 
       - name: Install dependencies
+        working-directory: ./source-code
         run: npm ci
 
-      - name: Build app
-        run: |
-          npm run build-prod
-          npm run builder -- --win --mac  # Only build .exe/.dmg
+      - name: Build Electron macOS app
+        working-directory: ./source-code
+        run: npm run builder-mac
 
-      # 3. Release to GitHub
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
+      - name: Upload release artifact (DMG)
+        uses: actions/upload-artifact@v3
         with:
-          files: |
-            release-output/*.exe
-            release-output/*.dmg
-            release-output/latest*.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Auto-injected
+          name: macos-electron-app
+          path: source-code/release-output/*.dmg
