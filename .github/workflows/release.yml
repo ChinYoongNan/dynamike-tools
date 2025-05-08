@@ -45,10 +45,14 @@ jobs:
           # Clean up source code
           cd ..
           rm -rf dynamike-tools
-
-      # Optional: Upload build artifacts to GitHub
-      # - name: Upload build artifacts
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: macos-build
-      #     path: release-output/
+          
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ inputs.tag_name }}
+          name: Release ${{ inputs.tag_name }}
+          files: |
+            release-output/*.dmg
+            release-output/*.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
