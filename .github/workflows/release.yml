@@ -1,41 +1,45 @@
-name: Build macOS Electron App
+name: Release
 
 on:
   workflow_dispatch:
     inputs:
       ref:
-        description: 'GitLab tag reference'
+        description: 'GitLab Tag'
         required: true
-        default: 'refs/tags/1.0.0'
+        default: ''
 
 jobs:
-  build-macos:
+  create-tag-and-build:
     runs-on: macos-latest
-
     steps:
-      - name: Checkout minimal runner repo
+      - name: Checkout GitHub repository
         uses: actions/checkout@v3
 
-      - name: Clone source code from GitLab
+      - name: Check if tag exists on GitHub
+        id: check_tag
         run: |
-          git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/your-group/your-private-repo.git source-code
-          ls source-code
+          TAG_EXISTS=$(curl --silent --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/ChinYoongNan/dynamike-tools/tags" | grep -o "1.0.0")
+          echo "Tag exists: $TAG_EXISTS"
+          if [ -z "$TAG_EXISTS" ]; then
+            echo "Tag does not exist. Creating and pushing tag."
+            git tag 1.0.0
+            git push origin 1.0.0
+          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16
 
-      - name: Install dependencies
-        working-directory: ./source-code
-        run: npm ci
+      - name: Clone GitLab repo and build
+        run: |
+          git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/your-group/your-private-repo.git source-code
+          cd source-code
+          npm ci
+          npm run builder-mac
 
-      - name: Build Electron macOS app
-        working-directory: ./source-code
-        run: npm run builder-mac
-
-      - name: Upload release artifact (DMG)
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: macos-electron-app
+          name: macos-build
           path: source-code/release-output/*.dmg
