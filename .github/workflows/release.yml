@@ -30,8 +30,13 @@ jobs:
           source $NVM_DIR/nvm.sh
           nvm install 16.7.0
           nvm use 16.7.0
+          echo "export NVM_DIR=$NVM_DIR" >> $GITHUB_ENV
+          echo ". $NVM_DIR/nvm.sh" >> $GITHUB_ENV
           node -v
           npm -v
+          
+      - name: Clone & Build
+        run: |
           git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/yoongnan/dynamike-tools.git
           cd dynamike-tools
           npm cache clean --force
@@ -47,11 +52,11 @@ jobs:
           cd ..
           rm -rf dynamike-tools
           
-      - name: Upload macOS Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: mac-release
-          path: release-mac/*
+      # - name: Upload macOS Artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: mac-release
+      #     path: release-mac/*
           
   build-win:
     name: Build Windows App
