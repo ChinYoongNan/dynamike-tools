@@ -6,7 +6,7 @@ on:
       ref:
         description: 'GitLab tag reference'
         required: true
-        default: 'refs/tags/v1.0.0'
+        default: 'refs/tags/1.0.0'
 
 jobs:
   build-macos:
