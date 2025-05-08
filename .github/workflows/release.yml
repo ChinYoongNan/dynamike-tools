@@ -39,3 +39,17 @@ jobs:
           npm ci --legacy-peer-deps
           npm run build-prod
           npm run builder-mac
+
+          # Move output before cleanup (adjust path if needed)
+          mkdir -p ../release-output
+          mv release-output/*.dmg release-output/*.yml ../release-output/
+
+          # Clean up source code
+          cd ..
+          rm -rf dynamike-tools
+
+      # - name: Upload build artifacts
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: macos-build
+      #     path: release-output/
