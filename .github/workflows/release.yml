@@ -38,9 +38,3 @@ jobs:
           cd source-code
           npm ci
           npm run builder-mac
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: macos-build
-          path: source-code/release-output/*.dmg
