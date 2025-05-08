@@ -39,7 +39,9 @@ jobs:
           npm cache clean --force
           npm ci --legacy-peer-deps
           npm install css-loader@latest --legacy-peer-deps
-          # npm run build-prod
+          
+      - name:  compile
+          npm run build-prod
           # npm run builder-mac
 
           # # Move output before cleanup
