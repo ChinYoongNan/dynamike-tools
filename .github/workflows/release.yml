@@ -61,11 +61,11 @@ jobs:
     steps:
       - name: Checkout GitHub repository
         uses: actions/checkout@v3
-
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.11
+        
+      - name: Set up Python and build tools
+        run: |
+          apt-get update
+          apt-get install -y python3 python3-pip python3-dev build-essential curl git
           
       - name: Install nvm and Node.js
         run: |
@@ -77,6 +77,8 @@ jobs:
           . $NVM_DIR/nvm.sh 
           nvm install 16.7.0
           nvm use 16.7.0
+          echo "export NVM_DIR=$NVM_DIR" >> $GITHUB_ENV
+          echo ". $NVM_DIR/nvm.sh" >> $GITHUB_ENV
           node -v
           npm -v
           git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/yoongnan/dynamike-tools.git
@@ -93,6 +95,8 @@ jobs:
           # Clean up source code
           cd ..
           rm -rf dynamike-tools
+
+          
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
