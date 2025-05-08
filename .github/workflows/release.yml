@@ -3,7 +3,7 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
-      ref:
+      tag_name:
         description: 'GitLab Tag'
         required: true
         default: ''
