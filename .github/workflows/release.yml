@@ -35,6 +35,7 @@ jobs:
           
       - name: Clone & Build
         run: |
+          nvm use 16.7.0
           git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/yoongnan/dynamike-tools.git
           cd dynamike-tools
           npm cache clean --force
@@ -81,6 +82,11 @@ jobs:
           node -v
           npm -v
           git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/yoongnan/dynamike-tools.git
+          export NVM_DIR="$HOME/.nvm"
+          . "$NVM_DIR/nvm.sh"
+        
+          # Point WINE to a directory the runner user owns
+          export WINEPREFIX="$HOME/.wine"
           cd dynamike-tools
           npm cache clean --force
           npm ci --legacy-peer-deps
