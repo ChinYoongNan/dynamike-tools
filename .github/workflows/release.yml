@@ -18,12 +18,12 @@ jobs:
       - name: Check if tag exists on GitHub
         id: check_tag
         run: |
-          TAG_EXISTS=$(curl --silent --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/ChinYoongNan/dynamike-tools/tags" | grep -o "1.0.0")
+          TAG_EXISTS=$(curl --silent --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/ChinYoongNan/dynamike-tools/tags" | grep -o "${{ github.event.inputs.tag_name }}")
           echo "Tag exists: $TAG_EXISTS"
           if [ -z "$TAG_EXISTS" ]; then
             echo "Tag does not exist. Creating and pushing tag."
-            git tag 1.0.0
-            git push origin 1.0.0
+            git tag ${{ github.event.inputs.tag_name }}
+            git push origin ${{ github.event.inputs.tag_name }}
           fi
 
       - name: Set up Node.js
@@ -33,13 +33,27 @@ jobs:
 
       - name: Clone GitLab repo and build
         run: |
+          # Clone the GitLab repository
           git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/your-group/your-private-repo.git source-code
           cd source-code
+          
+          # Install dependencies and build the app
           npm ci
           npm run builder-mac
+          
+          # Remove the source code directory to only keep the build artifacts
+          cd ..
+          rm -rf source-code
 
-      - name: Upload build artifacts
+      - name: Upload build artifacts (DMG and .latest.yml)
         uses: actions/upload-artifact@v3
         with:
           name: macos-build
           path: source-code/release-output/*.dmg
+          retention-days: 1  # Retain artifacts for 1 day, adjust as needed
+
+      - name: Upload latest.yml artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: latest-yml
+          path: source-code/release-output/latest*.yml
