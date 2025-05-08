@@ -27,8 +27,8 @@ jobs:
           mkdir -p $NVM_DIR
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
           source $NVM_DIR/nvm.sh
-          nvm install 18.17.0
-          nvm use 18.17.0
+          nvm install 16.7.0
+          nvm use 16.7.0
           node -v
           npm -v
 
@@ -37,6 +37,7 @@ jobs:
           git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/yoongnan/dynamike-tools.git
           cd dynamike-tools
           npm ci --legacy-peer-deps
+          npm install css-loader@latest --legacy-peer-deps
           npm run build-prod
           npm run builder-mac
 
