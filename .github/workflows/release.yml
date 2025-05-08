@@ -35,7 +35,6 @@ jobs:
           cd dynamike-tools
           npm cache clean --force
           npm ci --legacy-peer-deps
-          cd dynamike-tools
           npm run build-prod
           npm run builder-mac
 
