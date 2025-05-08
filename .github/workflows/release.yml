@@ -30,8 +30,6 @@ jobs:
           source $NVM_DIR/nvm.sh
           nvm install 16.7.0
           nvm use 16.7.0
-          echo "export NVM_DIR=$NVM_DIR" >> $GITHUB_ENV
-          echo ". $NVM_DIR/nvm.sh" >> $GITHUB_ENV
           node -v
           npm -v
           
@@ -74,16 +72,12 @@ jobs:
           
       - name: Install nvm and Node.js
         run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-dev build-essential
           export NVM_DIR="$HOME/.nvm"
           mkdir -p $NVM_DIR
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
           . $NVM_DIR/nvm.sh 
           nvm install 16.7.0
           nvm use 16.7.0
-          echo "export NVM_DIR=$NVM_DIR" >> $GITHUB_ENV
-          echo ". $NVM_DIR/nvm.sh" >> $GITHUB_ENV
           node -v
           npm -v
           git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/yoongnan/dynamike-tools.git
