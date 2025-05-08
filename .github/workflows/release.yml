@@ -34,7 +34,7 @@ jobs:
 
       - name: Clone GitLab repo and build
         run: |
-          git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/your-group/your-private-repo.git source-code
-          cd source-code
-          npm ci
+          git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/ChinYoongNan/dynamike-tools.git source-code
+          npm ci --legacy-peer-deps
+          npm run build-prod
           npm run builder-mac
