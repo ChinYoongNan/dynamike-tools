@@ -12,7 +12,6 @@ jobs:
   build-mac:
     name: Build macOS App
     runs-on: macos-latest
-    needs: [build-android]
 
     steps:
       - name: Checkout GitHub repository
@@ -58,7 +57,6 @@ jobs:
   build-win:
     name: Build Windows App
     runs-on: ubuntu-latest
-    needs: [build-android]
     container:
       image: electronuserland/builder:wine  # Wine + Electron Builder for Windows build
       options: --env HOME=/home/user
@@ -94,7 +92,7 @@ jobs:
           mkdir -p ../release-win
           # Rename installer for consistent formatting
           mv release-output/*.exe release-output/*.yml ../release-win/
-          mv release-win/DynamikeApp Setup ${{ inputs.tag_name }}.exe release-win/DynamikeApp-Setup-${{ inputs.tag_name }}.exe
+          mv "release-win/DynamikeApp Setup ${{ inputs.tag_name }}.exe" "release-win/DynamikeApp-Setup-${{ inputs.tag_name }}.exe"
 
           # Clean up source code
           cd ..
