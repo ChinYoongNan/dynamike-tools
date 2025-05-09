@@ -93,7 +93,6 @@ jobs:
           # Rename installer for consistent formatting
           mv release-output/*.exe ../release-win/DynamikeApp-Setup-${{ inputs.tag_name }}.exe
           mv release-output/*.yml ../release-win/
-          cd ..
 
           # Clean up source code
           cd ..
@@ -166,6 +165,10 @@ jobs:
 
           mkdir -p ../release-android
           mv /home/runner/work/dynamike-tools/dynamike-tools/dynamike-tools/platforms/android/app/build/outputs/bundle/release/*.aab ../release-android/com.dynamike.app.1.0.${{ inputs.tag_name }}.abb
+          
+          # Clean up source code
+          cd ..
+          rm -rf dynamike-tools
 
       - name: Upload Android Artifact
         uses: actions/upload-artifact@v4
