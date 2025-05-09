@@ -138,10 +138,7 @@ jobs:
 
           # Move output before cleanup
           mkdir -p ../release-android
-          # Rename installer for consistent formatting
-          mv /*.abb ../release-android/
-
-          # Clean up source code
+          cp android/app/build/outputs/bundle/release/app-release.aab ../release-android/
           cd ..
           rm -rf dynamike-tools
         
