@@ -138,7 +138,7 @@ jobs:
 
           # Move output before cleanup
           mkdir -p ../release-android
-          cp android/app/build/outputs/bundle/release/app-release.aab ../release-android/
+          cp android/app/build/outputs/bundle/release/app-release.aab ../release-android/com.dynamike.app.1.0.${{ inputs.tag_name }}.abb
           cd ..
           rm -rf dynamike-tools
         
