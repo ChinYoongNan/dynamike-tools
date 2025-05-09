@@ -26,17 +26,6 @@ jobs:
         with:
           node-version: 16.7.0
           
-      # - name: Install nvm and Node.js
-      #   run: |
-      #     export NVM_DIR="$HOME/.nvm"
-      #     mkdir -p $NVM_DIR
-      #     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-      #     source $NVM_DIR/nvm.sh
-      #     nvm install 16.7.0
-      #     nvm use 16.7.0
-      #     node -v
-      #     npm -v
-          
       - name: Clone & Install Dependencies
         run: |
           git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/yoongnan/dynamike-tools.git
@@ -59,11 +48,11 @@ jobs:
           cd ..
           rm -rf dynamike-tools
           
-      # - name: Upload macOS Artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: mac-release
-      #     path: release-mac/*
+      - name: Upload macOS Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac-release
+          path: release-mac/*
           
   build-win:
     name: Build Windows App
@@ -85,37 +74,6 @@ jobs:
         with:
           node-version: 16.7.0
           
-      # - name: Install nvm and Node.js
-      #   run: |
-      #     export NVM_DIR="$HOME/.nvm"
-      #     mkdir -p $NVM_DIR
-      #     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-      #     . $NVM_DIR/nvm.sh 
-      #     nvm install 16.7.0
-      #     nvm use 16.7.0
-      #     node -v
-      #     npm -v
-      #     git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/yoongnan/dynamike-tools.git
-      #     export NVM_DIR="$HOME/.nvm"
-      #     . "$NVM_DIR/nvm.sh"
-        
-      #     # Point WINE to a directory the runner user owns
-      #     export WINEPREFIX="$HOME/.wine"
-      #     cd dynamike-tools
-      #     npm cache clean --force
-      #     npm ci --legacy-peer-deps
-      #     npm run build-prod
-      #     npm run builder-win --publish=never
-
-      #     # Move output before cleanup
-      #     mkdir -p ../release-win
-      #     mv release-output/*.exe release-output/*.yml ../release-win/
-
-      #     # Clean up source code
-      #     cd ..
-      #     rm -rf dynamike-tools
-
-          
       - name: Clone & Install Dependencies
         run: |
           git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/yoongnan/dynamike-tools.git
@@ -132,11 +90,19 @@ jobs:
 
           # Move output before cleanup
           mkdir -p ../release-win
-          mv release-output/*.exe release-output/*.yml ../release-win/
+          # Rename installer for consistent formatting
+          mv release-output/DynamikeApp Setup 1.0.29.exe release-win/DynamikeApp-Setup-1.0.29.exe
+          mv release-output/*.yml ../release-win/
 
           # Clean up source code
           cd ..
           rm -rf dynamike-tools
+        
+      - name: Upload Windows Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: win-release
+          path: release-win/*
           
   release:
     name: Create GitHub Release
