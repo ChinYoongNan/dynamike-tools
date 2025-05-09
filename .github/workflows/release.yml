@@ -145,10 +145,10 @@ jobs:
           cd ..
           rm -rf dynamike-tools
         
-      - name: Upload Windows Artifacts
+      - name: Upload Android Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: win-release
+          name: android-release
           path: release-android/*
           
   release:
