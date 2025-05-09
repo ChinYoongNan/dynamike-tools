@@ -108,6 +108,11 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: registry.gitlab.com/bitnami/bitnami-docker-android:latest
+      options: --user=root
+    env:
+      ANDROID_SDK_ROOT: /opt/android-sdk
+      ANDROID_HOME: /opt/android-sdk
+      PATH: /opt/android-sdk/platform-tools:/opt/android-sdk/cmdline-tools/latest/bin:$PATH
     steps:
       - name: Checkout GitHub repository
         uses: actions/checkout@v3
