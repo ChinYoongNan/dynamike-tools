@@ -165,7 +165,7 @@ jobs:
           npm run android-prod
 
           mkdir -p ../release-android
-          mv *.aab ../release-android/
+          mv home/runner/work/dynamike-tools/dynamike-tools/dynamike-tools/platforms/android/app/build/outputs/bundle/release/*.aab ../release-android/com.dynamike.app.1.0.${{ inputs.tag_name }}.abb
 
       - name: Upload Android Artifact
         uses: actions/upload-artifact@v4
