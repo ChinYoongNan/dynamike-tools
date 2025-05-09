@@ -62,9 +62,10 @@ jobs:
           
   build-win:
     name: Build Windows App
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     container:
       image: electronuserland/builder:wine  # Wine + Electron Builder for Windows build
+      options: --user 1000 --env HOME=/home/user
     steps:
       - name: Checkout GitHub repository
         uses: actions/checkout@v3
