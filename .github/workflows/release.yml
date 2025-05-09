@@ -37,12 +37,16 @@ jobs:
       #     node -v
       #     npm -v
           
-      - name: Clone & Build
+      - name: Clone & Install Dependencies
         run: |
           git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/yoongnan/dynamike-tools.git
           cd dynamike-tools
           npm cache clean --force
           npm ci --legacy-peer-deps
+          
+          
+      - name: Build & Cleaning
+        run: |
           npm run build-prod
           npm run builder-mac -- --publish=never
 
