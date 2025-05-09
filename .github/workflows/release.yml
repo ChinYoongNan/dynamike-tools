@@ -109,7 +109,7 @@ jobs:
     name: Build Android App
     runs-on: ubuntu-latest
     container:
-      image: registry.gitlab.com/bitnami/bitnami-docker-android:latest
+      image: reactnativecommunity/react-native-android:latest
       options: --user=root
     env:
       ANDROID_SDK_ROOT: /opt/android-sdk
