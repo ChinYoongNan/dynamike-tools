@@ -21,17 +21,21 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: 3.11
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16.7.0
           
-      - name: Install nvm and Node.js
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          mkdir -p $NVM_DIR
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-          source $NVM_DIR/nvm.sh
-          nvm install 16.7.0
-          nvm use 16.7.0
-          node -v
-          npm -v
+      # - name: Install nvm and Node.js
+      #   run: |
+      #     export NVM_DIR="$HOME/.nvm"
+      #     mkdir -p $NVM_DIR
+      #     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+      #     source $NVM_DIR/nvm.sh
+      #     nvm install 16.7.0
+      #     nvm use 16.7.0
+      #     node -v
+      #     npm -v
           
       - name: Clone & Build
         run: |
@@ -91,7 +95,7 @@ jobs:
           npm cache clean --force
           npm ci --legacy-peer-deps
           npm run build-prod
-          npm run builder-win -- --publish=never
+          npm run builder-win --publish=never
 
           # Move output before cleanup
           mkdir -p ../release-win
