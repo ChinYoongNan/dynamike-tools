@@ -47,6 +47,7 @@ jobs:
           
       - name: Build & Cleaning
         run: |
+          cd dynamike-tools
           npm run build-prod
           npm run builder-mac -- --publish=never
 
