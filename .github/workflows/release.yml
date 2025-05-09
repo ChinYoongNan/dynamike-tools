@@ -92,7 +92,9 @@ jobs:
           mkdir -p ../release-win
           # Rename installer for consistent formatting
           mv release-output/*.exe release-output/*.yml ../release-win/
-          mv "release-win/DynamikeApp Setup ${{ inputs.tag_name }}.exe" "release-win/DynamikeApp-Setup-${{ inputs.tag_name }}.exe"
+          cd release-win/
+          mv "DynamikeApp Setup ${{ inputs.tag_name }}.exe" "DynamikeApp-Setup-${{ inputs.tag_name }}.exe"
+          cd ..
 
           # Clean up source code
           cd ..
