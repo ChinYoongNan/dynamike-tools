@@ -152,12 +152,17 @@ jobs:
           npm cache clean --force
           npm ci --legacy-peer-deps
 
-      - name: Build Android App
+      - name: Build 
+        run: |
+          cd dynamike-tools
+          npm run build-prod
+          
+      - name: Build Cordova App
         run: |
           cd dynamike-tools
           cordova platform add android@9.1.0 
           cordova create dynamike com.dynamike.app DynamikeApp
-          npm run build-prod
+          cd dynamike
           npm run android-prod
 
           mkdir -p ../release-android
