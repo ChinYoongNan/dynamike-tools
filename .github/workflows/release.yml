@@ -91,7 +91,7 @@ jobs:
           # Move output before cleanup
           mkdir -p ../release-win
           # Rename installer for consistent formatting
-          mv release-output/DynamikeApp Setup 1.0.29.exe release-win/DynamikeApp-Setup-1.0.29.exe
+          mv release-output/DynamikeApp Setup 1.0.29.exe ../release-win/DynamikeApp-Setup-1.0.29.exe
           mv release-output/*.yml ../release-win/
 
           # Clean up source code
