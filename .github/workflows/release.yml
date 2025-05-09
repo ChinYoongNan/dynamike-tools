@@ -128,7 +128,7 @@ jobs:
           export HOME=/tmp
           cd dynamike-tools
           npm run build-prod
-          npm run builder-win --publish=never
+          npm run builder-win -- --publish=never
 
           # Move output before cleanup
           mkdir -p ../release-win
