@@ -91,9 +91,8 @@ jobs:
           # Move output before cleanup
           mkdir -p ../release-win
           # Rename installer for consistent formatting
-          mv release-output/*.exe release-output/*.yml ../release-win/
-          cd release-win
-          mv "DynamikeApp Setup ${{ inputs.tag_name }}.exe" "DynamikeApp-Setup-${{ inputs.tag_name }}.exe"
+          mv release-output/*.exe ../release-win/DynamikeApp-Setup-${{ inputs.tag_name }}.exe
+          mv release-output/*.yml ../release-win/
           cd ..
 
           # Clean up source code
