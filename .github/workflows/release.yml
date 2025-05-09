@@ -164,7 +164,7 @@ jobs:
           npm run android-prod
 
           mkdir -p ../release-android
-          mv /home/runner/work/dynamike-tools/dynamike-tools/dynamike-tools/platforms/android/app/build/outputs/bundle/release/*.aab ../release-android/com.dynamike.app.1.0.${{ inputs.tag_name }}.aab
+          mv /home/runner/work/dynamike-tools/dynamike-tools/dynamike-tools/platforms/android/app/build/outputs/bundle/release/*.aab ../release-android/com.dynamike.app.${{ inputs.tag_name }}.aab
           
           # Clean up source code
           cd ..
