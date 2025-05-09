@@ -108,48 +108,57 @@ jobs:
   build-android:
     name: Build Android App
     runs-on: ubuntu-latest
-    container:
-      image: reactnativecommunity/react-native-android:latest
-      options: --user=root
-    env:
-      ANDROID_SDK_ROOT: /opt/android-sdk
-      ANDROID_HOME: /opt/android-sdk
-      PATH: /opt/android-sdk/platform-tools:/opt/android-sdk/cmdline-tools/latest/bin:$PATH
+
     steps:
       - name: Checkout GitHub repository
         uses: actions/checkout@v3
-        
-      - name: Set up Python and build tools
-        run: |
-          apt-get update
-          apt-get install -y python3 python3-pip python3-dev build-essential curl git
 
-      - name: Setup Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 16.7.0
-          
-      - name: Clone & Install Dependencies
+
+      - name: Set up Java (required by Android SDK)
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          target: default
+          arch: x86_64
+          force-avd-creation: false
+          script: echo "Android SDK is ready."
+
+      - name: Accept Android SDK licenses
+        run: |
+          yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses || true
+
+      - name: Install other build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential python3 python3-pip
+
+      - name: Clone & Install App Dependencies
         run: |
           git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/yoongnan/dynamike-tools.git
           cd dynamike-tools
           npm cache clean --force
           npm ci --legacy-peer-deps
-          
-      - name: Build & Cleaning
+
+      - name: Build Android App
         run: |
-          export HOME=/tmp
           cd dynamike-tools
           npm run build-prod
           npm run android-prod
 
-          # Move output before cleanup
           mkdir -p ../release-android
-          cp android/app/build/outputs/bundle/release/app-release.aab ../release-android/com.dynamike.app.1.0.${{ inputs.tag_name }}.abb
-          cd ..
-          rm -rf dynamike-tools
-        
-      - name: Upload Android Artifacts
+          mv *.aab ../release-android/
+
+      - name: Upload Android Artifact
         uses: actions/upload-artifact@v4
         with:
           name: android-release
