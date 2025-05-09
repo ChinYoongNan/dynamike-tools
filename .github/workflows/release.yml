@@ -208,8 +208,8 @@ jobs:
           files: |
             android-release/*.aab
             mac-release/*.dmg
-            mac-release/*.yml
+            mac-release/latest-mac.yml
             win-release/*.exe
-            win-release/*.yml
+            win-release/latest.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
