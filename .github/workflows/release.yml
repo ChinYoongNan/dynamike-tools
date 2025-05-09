@@ -161,8 +161,7 @@ jobs:
         run: |
           cd dynamike-tools
           cordova platform add android@9.1.0 
-          cordova create dynamike com.dynamike.app DynamikeApp
-          cd dynamike
+          
           npm run android-prod
 
           mkdir -p ../release-android
