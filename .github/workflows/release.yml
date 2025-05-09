@@ -103,6 +103,54 @@ jobs:
           name: win-release
           path: release-win/*
           
+  build-android:
+    name: Build Android App
+    runs-on: ubuntu-latest
+    container:
+      image: registry.gitlab.com/bitnami/bitnami-docker-android:latest
+    steps:
+      - name: Checkout GitHub repository
+        uses: actions/checkout@v3
+        
+      - name: Set up Python and build tools
+        run: |
+          apt-get update
+          apt-get install -y python3 python3-pip python3-dev build-essential curl git
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16.7.0
+          
+      - name: Clone & Install Dependencies
+        run: |
+          git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.com/yoongnan/dynamike-tools.git
+          cd dynamike-tools
+          npm cache clean --force
+          npm ci --legacy-peer-deps
+          
+      - name: Build & Cleaning
+        run: |
+          export HOME=/tmp
+          cd dynamike-tools
+          npm run build-prod
+          npm run android-prod
+
+          # Move output before cleanup
+          mkdir -p ../release-android
+          # Rename installer for consistent formatting
+          mv /*.abb ../release-android/
+
+          # Clean up source code
+          cd ..
+          rm -rf dynamike-tools
+        
+      - name: Upload Windows Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: win-release
+          path: release-android/*
+          
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
