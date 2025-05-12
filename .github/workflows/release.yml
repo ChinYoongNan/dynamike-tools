@@ -1,4 +1,4 @@
-name: Build and Release
+name: Electron & Cordova Build and Release for Electron-Autoupdater
 
 on:
   workflow_dispatch:
