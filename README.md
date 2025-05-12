@@ -1,98 +1,98 @@
-# dynamike_tools
+# DynamikeApp
 
-upgrade the npm version
-========================
-npm install -g npm@latest
+**DynamikeApp** is an internal all-in-one business management platform built to support the daily operations of Dynamike Café and its affiliated businesses. It streamlines sales, staff management, inventory, accounting, and integrates with major e-commerce platforms like Lazada and Shopee.
 
-install necessary library
-=========================
-npm install
-npm install -g @angular/cli@14
-npm install -g @angular-devkit/build-angular 
+---
 
-Start Server
-=============
-npm run build -- -c=prod
+## 🚀 Key Features
 
-Configure for Android 
-=======================
-npm install -g cordova
+### 🔧 Business Operations
+- **Point of Sale (POS)**: Fast and intuitive POS for café and retail environments.
+- **Cash Drawer Support**: Automatically kick open drawer on completed sales.
+- **Accounting System**: Integrated tracking for income, expenses, and profit/loss.
+- **Cash Flow Monitoring**: Track and analyze real-time business cash movement.
 
-cordova create dynamike com.dynamike.app DynamikeApp
+### 🍳 Kitchen Dashboard
+- **Real-Time Order Display**: Orders instantly appear on a dedicated kitchen screen.
+- **Order Status Management**: Mark orders as in progress, completed, or delayed.
+- **Multi-Terminal Support**: Sync orders between cashier and kitchen systems.
 
-cd dynamike
+### 📦 Inventory & Product Management
+- **Stock-Tick Inventory System**: Real-time stock tracking and adjustments.
+- **Product Photo Management**:
+  - Upload to Google Drive.
+  - View from Google Drive inside the app.
 
-ng build --base-href . --output-path ../www/
+### 👥 Staff Management
+- **Clock In/Out System**: Log staff attendance and working hours.
+- **Payslip Generation**: Auto-generate monthly payslips from attendance and salary data.
 
-cordova platform add android@10.1.2
+### 📈 Reporting & Documents
+- **Charts & Graphs**: Visualized business insights and performance.
+- **Document Generation**:
+  - **Invoices**
+  - **Cash Sales Receipts**
+  - **Payslips**
 
-cordova platform rm android
+### 🌐 API Integrations
+- **Lazada API**: Sync orders and products with Lazada.
+- **Shopee API**: Sync with Shopee platform.
+- **MyInvois API**: e-Invoicing compliant with Malaysia’s LHDN standards.
 
-cd C:\Users\bysadmin\AppData\Local\Android\Sdk\tools\bin
+### ☁️ Cloud & Communication
+- **Google Drive Integration**: 
+  - Upload product or document photos.
+  - Load images directly from Google Drive.
+- **Email Notifications**: Automated alerts for orders, reports, or low inventory.
 
-sdkmanager --licenses
+---
 
-set JAVA_HOME=java_1.8, ANDROID_HOME
+## 💻 Platform Support
 
-install gradle-6.2 and set path for C:\Gradle\gradle-6.2\bin
+### Electron Desktop App
+- **Windows & macOS**
+- **Auto-Updater**: Keeps app updated seamlessly using `electron-updater`.
+- **Drawer Kick Support**: Compatible with serial/USB cash drawers.
+- **Kitchen Display Support**: Secondary screen or browser mode for real-time kitchen updates.
 
+### Android Mobile App
+- **Cross-Platform Support (Cordova/Capacitor)**
+- **Publishable to Google Play Store**
+- Optimized for on-the-go sales, clocking, and order tracking.
 
-cordova build android
+---
 
-Exception
-=========
-cordova
-Installed Build Tools revision 31.0.0 is corrupted. Remove and install again using the SDK Manager.
-For Windows
-	1. go to the location
- "C:\Users\user\AppData\Local\Android\Sdk\build-tools\31.0.0"
-	2. find a file named d8.bat. This is a Windows batch file.
-	3. rename d8.bat to dx.bat.
-	4. in the folder lib ("C:\Users\user\AppData\Local\Android\Sdk\build-tools\31.0.0\lib")
-rename d8.jar to dx.jar
+## 🛠️ Tech Stack
 
+- **Frontend**: Angular
+- **Backend**: Java (Spring Boot)
+- **Desktop**: Electron + Node.js
+- **Mobile**: Cordova / Capacitor
+- **Database**: SQLite (local), MySQL/PostgreSQL (cloud sync)
+- **Cloud APIs**: Google Drive, Gmail API
 
-cordova run android --no-native-run
+---
 
-cordova emulate android
+## 🏢 Usage Scope
 
-Install cordova and build apk
-=======================
-npm install -g cordova
-ng build --aot
-cordova build android
+DynamikeApp is intended for **internal use** only, tailored specifically for:
+- Café & F&B operations
+- E-commerce sync
+- Staff and outlet management
+- Inventory & purchasing tracking
 
-Debug Android App
-=======================
-cordova run android --debug --target=YOURDEVICEIDHER
-chrome://inspect/#devices
+---
 
-Release Android App
-=======================
-cordova build --release android
+## 🔧 Developer Notes
 
+- Drawer kicking via ESC/POS commands (serial or USB).
+- Kitchen display runs on a dedicated Angular route or second monitor.
+- Auto-updates via `electron-updater` with GitHub or custom update server.
+- Cordova plugins: `cordova-plugin-file`, `cordova-plugin-camera`, `cordova-plugin-serial`, `cordova-plugin-google-drive-api`.
 
-Configure for Desktop apps
-==========================
-refer this link https://fireship.io/lessons/desktop-apps-with-electron-and-angular/
-npm install electron --save-dev
+---
 
-packing as exe file
-====================
-npm install electron-packager -g
-npm install electron-packager --save-dev
+## 📞 Contact
 
-window apps
-===========
-electron-packager . --platform=win32 --icon=build\dynamike.ico
+For internal deployment instructions or team access, contact the **Dynamike IT Team**.
 
-Mac apps
-===========
-electron-packager . --platform=darwin
-
-
-enable device file download
--add cordova into android platform
-===================================
-cd platform/android
-cordova plugin add cordova-plugin-file-transfer
