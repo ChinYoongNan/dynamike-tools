@@ -42,7 +42,7 @@ jobs:
 
           # Move output before cleanup
           mkdir -p ../release-mac
-          mv release-output/*.dmg release-output/*.yml ../release-mac/
+          mv release-output/*.dmg release-output/*.zip release-output/*.yml ../release-mac/
 
           # Clean up source code
           cd ..
@@ -208,6 +208,7 @@ jobs:
           files: |
             android-release/*.aab
             mac-release/*.dmg
+            mac-release/*.zip
             mac-release/latest-mac.yml
             win-release/*.exe
             win-release/latest.yml
