@@ -10,7 +10,7 @@
 - **Point of Sale (POS)**: Fast and intuitive POS for café and retail environments.
 - **Cash Drawer Support**: Automatically kick open drawer on completed sales.
 - **Accounting System**: Integrated tracking for income, expenses, and profit/loss.
-- **Cash Flow Monitoring**: Track and analyze real-time business cash movement.
+- **Cash Flow Monitoring**: Track and analyze nearest real-time business cash movement.
 
 ### 🍳 Kitchen Dashboard
 - **Real-Time Order Display**: Orders instantly appear on a dedicated kitchen screen.
@@ -18,7 +18,7 @@
 - **Multi-Terminal Support**: Sync orders between cashier and kitchen systems.
 
 ### 📦 Inventory & Product Management
-- **Stock-Tick Inventory System**: Real-time stock tracking and adjustments.
+- **Stock-Tick Inventory System**: Nearest Real-time stock tracking and adjustments.
 - **Product Photo Management**:
   - Upload to Google Drive.
   - View from Google Drive inside the app.
@@ -56,7 +56,7 @@
 - **Kitchen Display Support**: Secondary screen or browser mode for real-time kitchen updates.
 
 ### Android Mobile App
-- **Cross-Platform Support (Cordova/Capacitor)**
+- **Cross-Platform Support (Cordova)**
 - **Publishable to Google Play Store**
 - Optimized for on-the-go sales, clocking, and order tracking.
 
@@ -67,8 +67,8 @@
 - **Frontend**: Angular
 - **Backend**: Java (Spring Boot)
 - **Desktop**: Electron + Node.js
-- **Mobile**: Cordova / Capacitor
-- **Database**: SQLite (local), MySQL/PostgreSQL (cloud sync)
+- **Mobile**: Cordova 
+- **Database**: MySQL (cloud sync)
 - **Cloud APIs**: Google Drive, Gmail API
 
 ---
