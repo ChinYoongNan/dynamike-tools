@@ -92,6 +92,9 @@ DynamikeApp is intended for **internal use** only, tailored specifically for:
 
 ---
 
+## 🔧Unzip and Run the application
+xattr -cr DynamikeApp.app
+
 ## 📞 Contact
 
 For internal deployment instructions or team access, contact the **Dynamike IT Team**.
