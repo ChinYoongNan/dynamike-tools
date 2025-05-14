@@ -92,7 +92,7 @@ DynamikeApp is intended for **internal use** only, tailored specifically for:
 
 ---
 
-## 🔧Unzip and Run the application
+## 🔧Unzip and Run the application on MacOS
 xattr -cr DynamikeApp.app
 
 ## 📞 Contact
