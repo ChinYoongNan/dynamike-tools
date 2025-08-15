@@ -159,7 +159,7 @@ jobs:
       - name: Build Cordova App
         run: |
           cd dynamike-tools
-          cordova platform add android@13.0.0
+          cordova platform add android@14.0.0
           
           npm run android-prod
 
